@@ -30,7 +30,6 @@ class Logger {
 	private:
 		Logger() {};
 		Logger(Logger const&);
-		void operator=(Logger const&);
 		static void printWindTurbine(WindTurbine);
 };
 

@@ -15,23 +15,11 @@ namespace schmitt_co {
 
 class WindTurbine : public DrawableObject {
 	public:
-		enum Color {
-			WHITE = 0, BLACK, RED, BLUE, GREEN, YELLOW
-		};
-		WindTurbine(Color color, Position &pos);
+		WindTurbine(Color &color, Position &pos);
 		virtual ~WindTurbine();
-		Color color() const {
-			return mColor;
-		}
-		void set_color(Color color) {
-			mColor = color;
-		}
 		void draw();
 		std::ostream& print(std::ostream& out) const;
-	private:
-		Color mColor;
 };
-
 
 } /* namespace schmitt_co */
 

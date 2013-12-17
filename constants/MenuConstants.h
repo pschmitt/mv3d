@@ -18,6 +18,9 @@
 #define MENU_COLOR_RED "Red"
 #define MENU_COLOR_GREEN "Green"
 #define MENU_COLOR_BLUE "Blue"
+#define MENU_COLOR_YELLOW "Yellow"
+#define MENU_COLOR_WHITE "White"
+#define MENU_COLOR_BLACK "Black"
 #define MENU_QUIT "Quit"
 
 enum {
@@ -29,7 +32,10 @@ enum {
     MENU_WIND_STRONG_ID,
     MENU_COLOR_RED_ID,
     MENU_COLOR_BLUE_ID,
-    MENU_COLOR_GREEN_ID
+    MENU_COLOR_GREEN_ID,
+    MENU_COLOR_YELLOW_ID,
+    MENU_COLOR_WHITE_ID,
+    MENU_COLOR_BLACK_ID
 };
 
 

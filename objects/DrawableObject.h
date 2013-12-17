@@ -10,6 +10,7 @@
 
 #include <ostream>
 #include "Position.h"
+#include "Color.h"
 
 namespace schmitt_co {
 
@@ -20,16 +21,16 @@ class DrawableObject {
 		friend std::ostream& operator<<(std::ostream& out, const DrawableObject& obj) {
 			return obj.print(out);
 		}
-		Position position() const {
-			return mPostion;
-		}
-		void set_position(Position pos) {
-			mPostion = pos;
-		}
+		Position position() const;
+		void set_position(Position pos);
+		void set_color(Color color);
+	    Color color() const;
 		virtual void draw() = 0;
 	protected:
 		Position mPostion;
+		Color mColor;
 		virtual std::ostream& print(std::ostream&) const = 0;
+
 };
 
 } /* namespace schmitt_co */
