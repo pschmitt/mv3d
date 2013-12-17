@@ -5,55 +5,45 @@
  *      Author: pschmitt
  */
 
-#include <GL/freeglut_std.h>
 #include <GL/gl.h>
-//#include <GL/glu.h>
+#include <GL/glu.h>
 #include <GL/glut.h>
 #include <iostream>
+#include <list>
+#include <algorithm>
 
-#include "Wind.h"
+#include "constants/DefaultConstants.h"
+#include "constants/MenuConstants.h"
+#include "constants/WindowConstants.h"
 
+#include "utils/Logger.h"
+#include "objects/DrawableObject.h"
+#include "objects/Wind.h"
+#include "objects/WindTurbine.h"
+
+// debug mode
 #define DEBUG 1
-#define WINDOW_TITLE "MV3D - Projet - schmitt.co"
-#define WINDOW_HEIGHT 600
-#define WINDOW_WIDTH 800
-#define MENU_WIND "Wind Strength"
-#define MENU_WIND_NONE "None"
-#define MENU_WIND_WEAK "Weak"
-#define MENU_WIND_NORMAL "Normal"
-#define MENU_WIND_STRONG "Strong"
-#define MENU_COLOR "Color"
-#define MENU_COLOR_RED "Red"
-#define MENU_COLOR_GREEN "Green"
-#define MENU_COLOR_BLUE "Blue"
-#define MENU_QUIT "Quit"
-
-enum menu_id {
-    MENU_QUIT_ID = 0,
-    MENU_WIND_ID,
-    MENU_WIND_NONE_ID,
-    MENU_WIND_WEAK_ID,
-    MENU_WIND_NORMAL_ID,
-    MENU_WIND_STRONG_ID,
-    MENU_COLOR_RED_ID,
-    MENU_COLOR_BLUE_ID,
-    MENU_COLOR_GREEN_ID
-};
+// Window infos
 
 using namespace schmitt_co;
 
 Wind mWind;
+std::list<WindTurbine> mWindTurbineList;
+
+void drawObject(DrawableObject &obj) {
+	std::cout << "Drawing object " << obj << "..."<< std::endl;
+	obj.draw();
+}
 
 void display(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    for_each(mWindTurbineList.begin(), mWindTurbineList.end(), drawObject);
     glColor3f(0.0f, 0.0f, 0.0f);
     glutSwapBuffers();
 }
 
-void myinit(void) {
-}
-
 void reshape(int w, int h) {
+	// TODO
 }
 
 void keyPress(unsigned char key, int x, int y) {
@@ -84,16 +74,16 @@ void menuSelect(int selection) {
             exit(0);
             break;
         case MENU_WIND_NONE_ID:
-            mWind.setStrength(Wind::NONE);
+            mWind.set_strength(Wind::NONE);
             break;
         case MENU_WIND_WEAK_ID:
-            mWind.setStrength(Wind::WEAK);
+            mWind.set_strength(Wind::WEAK);
             break;
         case MENU_WIND_NORMAL_ID:
-            mWind.setStrength(Wind::NORMAL);
+            mWind.set_strength(Wind::NORMAL);
             break;
         case MENU_WIND_STRONG_ID:
-            mWind.setStrength(Wind::STRONG);
+            mWind.set_strength(Wind::STRONG);
             break;
         case MENU_COLOR_RED_ID:
             break;
@@ -102,7 +92,7 @@ void menuSelect(int selection) {
         case MENU_COLOR_BLUE_ID:
             break;
     }
-    std::cout << "Wind strength: " << mWind.getStrength() << std::endl;
+    std::cout << "Wind strength: " << mWind.strength() << std::endl;
 }
 
 void setupKeyboard() {
@@ -131,15 +121,22 @@ void setupMenu() {
 }
 
 void setupWorld() {
-    //mWind = new Wind;
+	Position pos = Position(0.0F, 0.0F, 0.0F);
+	WindTurbine wt = WindTurbine(WindTurbine::WHITE, pos);
+	mWindTurbineList.push_back(wt);
+	wt.draw();
+	/*for (int i = 0; i < 5; ++i) {
+		Position pos = Position(i, i + 2, i * 3);
+		WindTurbine wt = WindTurbine(WindTurbine::BLACK, pos);
+		mWindTurbineList.push_back(wt);
+	}*/
 }
 
-void screenInfo() {
-    std::cout << "Size: " << glutGet(GLUT_SCREEN_WIDTH) << "x"
-            << glutGet(GLUT_SCREEN_HEIGHT) << std::endl;
-    std::cout << "Position: " << glutGet((GLenum) GLUT_WINDOW_X) << "x"
-            << glutGet((GLenum) GLUT_WINDOW_Y) << std::endl;
-    std::cout << "window id: " << glutGetWindow() << std::endl;
+void debugInfo() {
+	Logger::screenInfo();
+	std::cout << "---" << std::endl;
+	// print wind turbine list to stdout
+	Logger::log(mWindTurbineList);
 }
 
 void setupWindow() {
@@ -160,7 +157,6 @@ int main(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
     setupWindow();
-    myinit();
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
     setupKeyboard();
@@ -168,7 +164,7 @@ int main(int argc, char **argv) {
     setupWorld();
 
 #ifdef DEBUG
-    screenInfo();
+    debugInfo();
 #endif
 
     glutMainLoop();

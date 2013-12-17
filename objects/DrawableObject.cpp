@@ -1,24 +1,21 @@
 /*
- * Wind.cpp
+ * Object.cpp
  *
- *  Created on: Dec 13, 2013
+ *  Created on: Dec 14, 2013
  *      Author: pschmitt
  */
 
-#include "Wind.h"
+#include "DrawableObject.h"
 
 namespace schmitt_co {
 
-Wind::Wind() {
+DrawableObject::DrawableObject() {
 	// TODO Auto-generated constructor stub
-	// mStrength = strength::ZERO;
-	mStrength = NONE;
-	mDirection = NORTH;
+
 }
 
-Wind::~Wind() {
+DrawableObject::~DrawableObject() {
 	// TODO Auto-generated destructor stub
 }
-
 
 } /* namespace schmitt_co */
