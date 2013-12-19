@@ -17,7 +17,7 @@ class Color {
 	friend std::ostream& operator<<(std::ostream& out, const Color& color);
 	public:
 		Color();
-		Color(float r, float g, float b);
+		Color(std::string n, float r, float g, float b);
 		virtual ~Color();
 		float b() const;
 		void set_b(float b);

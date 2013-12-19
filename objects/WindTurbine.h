@@ -15,7 +15,7 @@ namespace schmitt_co {
 
 class WindTurbine : public DrawableObject {
 	public:
-		WindTurbine(Color &color, Position &pos);
+		WindTurbine(const Color& color, const Position& pos);
 		virtual ~WindTurbine();
 		void draw();
 		std::ostream& print(std::ostream& out) const;

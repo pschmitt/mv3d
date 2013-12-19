@@ -7,6 +7,7 @@
 
 #include "Color.h"
 #include <iostream>
+#include <cstdlib>
 
 namespace schmitt_co {
 
@@ -16,7 +17,8 @@ Color::Color() {
 	bValue = 1.0F;
 }
 
-Color::Color(float r, float g, float b) {
+Color::Color(std::string n, float r, float g, float b) {
+	mName = n;
 	rValue = r;
 	gValue = g;
 	bValue = b;
@@ -59,14 +61,19 @@ void Color::set_r(float r) {
 }
 
 const float* Color::color() {
-	const float c[] = { rValue, gValue, bValue, 1.0F };
-	std::cout << rValue << " " << gValue << " " << bValue << std::endl;
-	return c;
+	// std::cout << rValue << " " << gValue << " " << bValue << std::endl;
+	float *color = (float*) calloc(4, sizeof(float));
+	color[0] = rValue;
+	color[1] = gValue;
+	color[2] = bValue;
+	color[3] = 1.0F;
+	return color;
 }
 
 std::ostream& operator<<(std::ostream& out, const Color& col) {
 	out << "[Color] ";
-	out << col.r() << "-" << col.g() << "-" << col.b();
+	out << col.name() << " (";
+	out << col.r() << "-" << col.g() << "-" << col.b() << ")";
 	return out;
 }
 

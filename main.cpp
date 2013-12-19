@@ -32,7 +32,7 @@ Wind mWind;
 std::list<WindTurbine> mWindTurbineList;
 
 void drawObject(DrawableObject &obj) {
-	//std::cout << "Drawing object " << obj << std::endl;
+	std::cout << "Drawing object " << obj << std::endl;
 	obj.draw();
 }
 
@@ -70,27 +70,27 @@ void specialKeyPress(int key, int x, int y) {
 }
 
 void makeRed(WindTurbine& wt) {
-	wt.set_color(Color(1.0F, 0.0F, 0.0F));
+	wt.set_color(ColorPalette::red());
 }
 
 void makeBlue(WindTurbine& wt) {
-	wt.set_color(Color(0.0F, 0.0F, 1.0F));
+	wt.set_color(ColorPalette::blue());
 }
 
 void makeGreen(WindTurbine& wt) {
-	wt.set_color(Color(0.0F, 1.0F, 0.0F));
+	wt.set_color(ColorPalette::green());
 }
 
 void makeYellow(WindTurbine& wt) {
-	wt.set_color(Color(1.0F, 1.0F, 0.0F));
+	wt.set_color(ColorPalette::yellow());
 }
 
 void makeWhite(WindTurbine& wt) {
-	wt.set_color(Color(1.0F, 1.0F, 1.0F));
+	wt.set_color(ColorPalette::white());
 }
 
 void makeBlack(WindTurbine& wt) {
-	wt.set_color(Color(0.0F, 0.0F, 0.0F));
+	wt.set_color(ColorPalette::black());
 }
 
 void menuSelect(int selection) {
@@ -168,8 +168,7 @@ void setupMenu() {
 
 void setupWorld() {
 	Position pos = Position(0.0F, 0.0F, 0.0F);
-	Color col = Color(1.0F, 0.0F, 0.0F);
-	WindTurbine wt = WindTurbine(col, pos);
+	WindTurbine wt = WindTurbine(ColorPalette::red(), pos);
 	wt.draw();
 	mWindTurbineList.push_back(wt);
 	/*for (int i = 0; i < 5; ++i) {

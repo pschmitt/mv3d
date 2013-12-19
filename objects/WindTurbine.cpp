@@ -11,7 +11,7 @@
 
 namespace schmitt_co {
 
-WindTurbine::WindTurbine(Color &color, Position &pos) {
+WindTurbine::WindTurbine(const Color& color, const Position& pos) {
 	mColor = color;
 	mPostion = pos;
 }
@@ -27,7 +27,6 @@ void WindTurbine::draw() {
 	glPushMatrix();
 	glRotatef(0.0F, 0.0F, 1.0F, 0.0F);
 	glRotatef(0.0F, 1.0F, 0.0F, 0.0F);
-	/* la couleur du dessin */
 	glColor4fv(mColor.color());
 	glutWireCube(0.4);
 	glPopMatrix();
