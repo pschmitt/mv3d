@@ -19,37 +19,61 @@
 #include "utils/Logger.h"
 #include "utils/ColorPalette.h"
 #include "objects/DrawableObject.h"
+#include "objects/Camera.h"
 #include "objects/Wind.h"
 #include "objects/WindTurbine.h"
 
 // debug mode
 #define DEBUG 1
-// Window infos
 
 using namespace schmitt_co;
 
-Wind mWind;
+Wind mWind = Wind();
+Camera mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
 std::list<WindTurbine> mWindTurbineList;
 
-void drawObject(DrawableObject &obj) {
+void draw_object(DrawableObject &obj) {
 	std::cout << "Drawing object " << obj << std::endl;
 	obj.draw();
 }
 
-void display(void) {
+void display_camera() {
+}
+
+void display() {
+	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	for_each(mWindTurbineList.begin(), mWindTurbineList.end(), drawObject);
-	glColor3f(0.0f, 0.0f, 0.0f);
+	//glPushMatrix();
+	//glLoadIdentity ();
+
+	for_each(mWindTurbineList.begin(), mWindTurbineList.end(), draw_object);
+	Logger::log(mCam);
+	mCam.update();
+
+	// glPopMatrix();
+
+	// http://www.delafond.org/traducmanfr/X11/man3/glFlush.3x.html
+	// glFlush();
 	glutSwapBuffers();
+}
+
+void idle() {
+	//mCam.update();
+	// glutPostRedisplay();
 }
 
 void reshape(int w, int h) {
 	// TODO
 }
 
+void mousePress(int button, int state, int x, int y) {
+	// TODO
+}
+
 void keyPress(unsigned char key, int x, int y) {
 	switch (key) {
 		case 'q':
+		case 27: // ESC
 			exit(0);
 			break;
 	}
@@ -62,8 +86,10 @@ void specialKeyPress(int key, int x, int y) {
 		case GLUT_KEY_DOWN:
 			break;
 		case GLUT_KEY_LEFT:
+			mCam.increase_angle();
 			break;
 		case GLUT_KEY_RIGHT:
+			mCam.decrease_angle();
 			break;
 	}
 	glutPostRedisplay();
@@ -138,6 +164,10 @@ void menuSelect(int selection) {
 	// std::cout << "Wind strength: " << mWind.strength() << std::endl;
 }
 
+void setupMouse() {
+	glutMouseFunc(mousePress);
+}
+
 void setupKeyboard() {
 	glutKeyboardFunc(keyPress);
 	glutSpecialFunc(specialKeyPress);
@@ -167,15 +197,25 @@ void setupMenu() {
 }
 
 void setupWorld() {
-	Position pos = Position(0.0F, 0.0F, 0.0F);
-	WindTurbine wt = WindTurbine(ColorPalette::red(), pos);
-	wt.draw();
-	mWindTurbineList.push_back(wt);
-	/*for (int i = 0; i < 5; ++i) {
-	 Position pos = Position(i, i + 2, i * 3);
-	 WindTurbine wt = WindTurbine(WindTurbine::BLACK, pos);
-	 mWindTurbineList.push_back(wt);
-	 }*/
+	// Init camera
+	// mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
+	// Let's create 5 wind turbines
+	WindTurbine wt1 = WindTurbine(ColorPalette::red(),
+			Position(0.0F, 0.0F, 0.0F));
+	WindTurbine wt2 = WindTurbine(ColorPalette::blue(),
+			Position(0.3f, 0.0f, 0.0f));
+	WindTurbine wt3 = WindTurbine(ColorPalette::green(),
+			Position(0.5f, 0.0f, 0.0f));
+	WindTurbine wt4 = WindTurbine(ColorPalette::yellow(),
+			Position(-0.3f, 0.0f, -0.0f));
+	WindTurbine wt5 = WindTurbine(ColorPalette::white(),
+			Position(-0.5f, 0.0f, -0.0f));
+	// Add them all to out windturbine list
+	mWindTurbineList.push_back(wt1);
+	mWindTurbineList.push_back(wt2);
+	mWindTurbineList.push_back(wt3);
+	mWindTurbineList.push_back(wt4);
+	mWindTurbineList.push_back(wt5);
 }
 
 void debugInfo() {
@@ -193,7 +233,7 @@ void setupWindow() {
 		glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH) - WINDOW_WIDTH) / 2,
 				(960 - WINDOW_HEIGHT) / 2);
 	} else {
-		// Center on screen (does NOT work whith multiples display!)
+		// Center on screen (does NOT work with multiple displays!)
 		glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH) - WINDOW_WIDTH) / 2,
 				(glutGet(GLUT_SCREEN_HEIGHT) - WINDOW_HEIGHT) / 2);
 	}
@@ -201,11 +241,20 @@ void setupWindow() {
 
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGB);
+	// http://www.opengl.org/documentation/specs/glut/spec3/node12.html
+	// GLUT_RGBA: RGBA mode window
+	// GLUT_DOUBLE: Double buffered window
+	// GLUT_DEPTH: Window with a depth buffer
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+	// GL_DEPTH_TEST: do depth comparisons and update the depth buffer
+	// http://www.opengl.org/sdk/docs/man/xhtml/glEnable.xml
+	glEnable(GL_DEPTH_TEST); // Do I need this?
 	setupWindow();
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
+	glutIdleFunc(idle);
 	setupKeyboard();
+	setupMouse();
 	setupMenu();
 	setupWorld();
 
@@ -214,5 +263,5 @@ int main(int argc, char **argv) {
 #endif
 
 	glutMainLoop();
-	return (0);
+	return 0;
 }

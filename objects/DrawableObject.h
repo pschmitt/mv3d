@@ -26,7 +26,10 @@ class DrawableObject {
 		void set_color(Color color);
 	    Color color() const;
 		virtual void draw() = 0;
+		float size() const;
+		void set_size(float size);
 	protected:
+		float mSize;
 		Position mPostion;
 		Color mColor;
 		virtual std::ostream& print(std::ostream&) const = 0;

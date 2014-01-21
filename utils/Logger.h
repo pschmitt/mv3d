@@ -13,6 +13,7 @@
 #include <iostream>
 #include <list>
 
+#include "../objects/Camera.h"
 #include "../objects/WindTurbine.h"
 
 namespace schmitt_co {
@@ -26,6 +27,7 @@ class Logger {
 		virtual ~Logger();
 		static void screenInfo();
 		static void log(std::list<WindTurbine>);
+		static void log(Camera cam);
 		//static void logAll();
 	private:
 		Logger() {};

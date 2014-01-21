@@ -26,4 +26,8 @@ void Logger::log(std::list<WindTurbine> l) {
 	for_each (l.begin(), l.end(), printWindTurbine);
 }
 
+void Logger::log(Camera cam) {
+	std::cout << cam << std::endl;
+}
+
 } /* namespace schmitt_co */

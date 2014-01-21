@@ -8,6 +8,7 @@
 #ifndef WINDTURBINE_H_
 #define WINDTURBINE_H_
 #include <ostream>
+#include <GL/glut.h>
 #include "DrawableObject.h"
 #include "Position.h"
 
@@ -19,6 +20,10 @@ class WindTurbine : public DrawableObject {
 		virtual ~WindTurbine();
 		void draw();
 		std::ostream& print(std::ostream& out) const;
+	private:
+		void drawBase(GLUquadric*& params);
+		void drawMotor(GLUquadric*& params);
+		void drawRotors(GLUquadric*& params);
 };
 
 } /* namespace schmitt_co */

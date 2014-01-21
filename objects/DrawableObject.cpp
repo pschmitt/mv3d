@@ -11,7 +11,8 @@
 namespace schmitt_co {
 
 DrawableObject::DrawableObject() {
-	// TODO Auto-generated constructor stub
+	// Default size
+	 mSize = 0.1f;
 }
 
 DrawableObject::~DrawableObject() {
@@ -33,6 +34,14 @@ void DrawableObject::set_color(Color color) {
 
 Color DrawableObject::color() const {
 	return mColor;
+}
+
+float DrawableObject::size() const {
+	return mSize;
+}
+
+void DrawableObject::set_size(float size) {
+	mSize = size;
 }
 
 } /* namespace schmitt_co */
