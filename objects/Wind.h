@@ -13,9 +13,6 @@
 namespace schmitt_co {
 
 class Wind : public DrawableObject {
-	friend std::ostream& operator<<(std::ostream& out,
-				const Wind& wt);
-
 	public:
 		enum Strength {
 			NONE = 0, WEAK, NORMAL, STRONG
@@ -41,6 +38,7 @@ class Wind : public DrawableObject {
 		void set_strength(Strength strength = NONE) {
 			mStrength = strength;
 		}
+
 		std::ostream& print(std::ostream& out) const;
 	private:
 		Strength mStrength;

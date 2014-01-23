@@ -30,4 +30,8 @@ void Logger::log(Camera cam) {
 	std::cout << cam << std::endl;
 }
 
+void Logger::log(Wind wind) {
+	std::cout << wind << std::endl;
+}
+
 } /* namespace schmitt_co */

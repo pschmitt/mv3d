@@ -9,9 +9,10 @@
 
 namespace schmitt_co {
 
-WindTurbine::WindTurbine(const Color& color, const Position& pos) {
+WindTurbine::WindTurbine(const Color& color, const Position& pos, const Wind& wind) {
 	mColor = color;
 	mPostion = pos;
+	mWind = wind;
 }
 
 WindTurbine::~WindTurbine() {
@@ -20,6 +21,7 @@ WindTurbine::~WindTurbine() {
 
 void WindTurbine::drawBase(GLUquadric*& params) {
 	glPushMatrix();
+		// glScalef(100 * mSize, 100* mSize, 100*mSize);
 		glRotated(90, 1, 0, 0);
 		gluCylinder(params, 0.10, 0.15, 2.5, 50, 50);
 		glTranslated(0, 0, 2.5);
@@ -29,6 +31,7 @@ void WindTurbine::drawBase(GLUquadric*& params) {
 
 void WindTurbine::drawMotor(GLUquadric*& params) {
 	//glRotated((double)this->OrientationVent,0,1,0);
+	glRotated(mWind.direction(), 0, 1, 0);
 	glPushMatrix();
 		glTranslated(0, 0, 0.19);
 		glutSolidTorus(0.075, 0.075, 15, 15);
@@ -56,6 +59,7 @@ void WindTurbine::drawRotors(GLUquadric*& params) {
 		glScalef(0.4f, 0.1f, 0.5f);
 		gluCylinder(params, 0.0, 0.2, 3, 50, 50);
 	glPopMatrix();
+
 	glPushMatrix(); // Second rotor
 		glTranslated(1.4, -0.527, 0.02);
 		glRotated(90, 0, 1, 0);
@@ -64,6 +68,7 @@ void WindTurbine::drawRotors(GLUquadric*& params) {
 		glScalef(0.4f, 0.1f, 0.5f);
 		gluCylinder(params, 0.0, 0.2, 3, 50, 50);
 	glPopMatrix();
+
 	glPushMatrix(); // Third rotor
 		glTranslated(-1.38, -0.62, 0.02);
 		glRotated(90, 0, 1, 0);
@@ -85,11 +90,19 @@ void WindTurbine::draw() {
 		glTranslated(mPostion.x(), mPostion.y(), mPostion.z());
 		// Scale it properly
 		glScalef(mSize, mSize, mSize);
-		// Start with the base
+		// Start with the base, then the motor and the rotors
 		drawBase(params);
 		drawMotor(params);
 		drawRotors(params);
 	glPopMatrix();
+}
+
+const Wind& WindTurbine::wind() const {
+	return mWind;
+}
+
+void WindTurbine::set_wind(const Wind& wind) {
+	mWind = wind;
 }
 
 std::ostream& WindTurbine::print(std::ostream& out) const {
@@ -97,6 +110,7 @@ std::ostream& WindTurbine::print(std::ostream& out) const {
 	out << "Color: ";
 	out << color();
 	out << " - " << position();
+	out << " - " << wind();
 	return out;
 }
 

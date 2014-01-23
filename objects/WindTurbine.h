@@ -11,19 +11,23 @@
 #include <GL/glut.h>
 #include "DrawableObject.h"
 #include "Position.h"
+#include "Wind.h"
 
 namespace schmitt_co {
 
 class WindTurbine : public DrawableObject {
 	public:
-		WindTurbine(const Color& color, const Position& pos);
+		WindTurbine(const Color& color, const Position& pos, const Wind& wind);
 		virtual ~WindTurbine();
 		void draw();
 		std::ostream& print(std::ostream& out) const;
+		const Wind& wind() const;
+		void set_wind(const Wind& wind);
 	private:
 		void drawBase(GLUquadric*& params);
 		void drawMotor(GLUquadric*& params);
 		void drawRotors(GLUquadric*& params);
+		Wind mWind;
 };
 
 } /* namespace schmitt_co */

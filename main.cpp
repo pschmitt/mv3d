@@ -29,6 +29,7 @@
 using namespace schmitt_co;
 
 Wind mWind = Wind();
+Color mColor = ColorPalette::white();
 Camera mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
 std::list<WindTurbine> mWindTurbineList;
 
@@ -43,21 +44,20 @@ void display_camera() {
 void display() {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glPushMatrix();
-	//glLoadIdentity ();
-
-	for_each(mWindTurbineList.begin(), mWindTurbineList.end(), draw_object);
-	Logger::log(mCam);
-	mCam.update();
-
-	// glPopMatrix();
+	glPushMatrix();
+		glLoadIdentity ();
+		mCam.update();
+		Logger::log(mCam);
+		for_each(mWindTurbineList.begin(), mWindTurbineList.end(), draw_object);
+	glPopMatrix();
 
 	// http://www.delafond.org/traducmanfr/X11/man3/glFlush.3x.html
 	// glFlush();
-	glutSwapBuffers();
+	glutSwapBuffers(); // swap buffers, otherwise we won't see anything
 }
 
 void idle() {
+	// TODO
 	//mCam.update();
 	// glutPostRedisplay();
 }
@@ -95,28 +95,19 @@ void specialKeyPress(int key, int x, int y) {
 	glutPostRedisplay();
 }
 
-void makeRed(WindTurbine& wt) {
-	wt.set_color(ColorPalette::red());
+/**
+ * Updates a single wind turbine
+ */
+void updateWindTurbine(WindTurbine& wt) {
+	wt.set_wind(mWind);
+	wt.set_color(mColor);
 }
 
-void makeBlue(WindTurbine& wt) {
-	wt.set_color(ColorPalette::blue());
-}
-
-void makeGreen(WindTurbine& wt) {
-	wt.set_color(ColorPalette::green());
-}
-
-void makeYellow(WindTurbine& wt) {
-	wt.set_color(ColorPalette::yellow());
-}
-
-void makeWhite(WindTurbine& wt) {
-	wt.set_color(ColorPalette::white());
-}
-
-void makeBlack(WindTurbine& wt) {
-	wt.set_color(ColorPalette::black());
+/**
+ * Update all windturbines in our list to reflect user choices
+ */
+void updateWindTurbines() {
+	for_each(mWindTurbineList.begin(), mWindTurbineList.end(), updateWindTurbine);
 }
 
 void menuSelect(int selection) {
@@ -137,31 +128,27 @@ void menuSelect(int selection) {
 			mWind.set_strength(Wind::STRONG);
 			break;
 		case MENU_COLOR_RED_ID:
-			for_each(mWindTurbineList.begin(), mWindTurbineList.end(), makeRed);
+			mColor = ColorPalette::red();
 			break;
 		case MENU_COLOR_GREEN_ID:
-			for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
-					makeGreen);
+			mColor = ColorPalette::green();
 			break;
 		case MENU_COLOR_BLUE_ID:
-			for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
-					makeBlue);
+			mColor = ColorPalette::blue();
 			break;
 		case MENU_COLOR_YELLOW_ID:
-			for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
-					makeYellow);
+			mColor = ColorPalette::yellow();
 			break;
 		case MENU_COLOR_WHITE_ID:
-			for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
-					makeWhite);
+			mColor = ColorPalette::white();
 			break;
 		case MENU_COLOR_BLACK_ID:
-			for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
-					makeBlack);
+			mColor = ColorPalette::black();
 			break;
+
 	}
+	updateWindTurbines();
 	glutPostRedisplay();
-	// std::cout << "Wind strength: " << mWind.strength() << std::endl;
 }
 
 void setupMouse() {
@@ -201,15 +188,15 @@ void setupWorld() {
 	// mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
 	// Let's create 5 wind turbines
 	WindTurbine wt1 = WindTurbine(ColorPalette::red(),
-			Position(0.0F, 0.0F, 0.0F));
+			Position(0.0F, 0.0F, 0.0F), mWind);
 	WindTurbine wt2 = WindTurbine(ColorPalette::blue(),
-			Position(0.3f, 0.0f, 0.0f));
+			Position(0.3f, 0.0f, 0.0f), mWind);
 	WindTurbine wt3 = WindTurbine(ColorPalette::green(),
-			Position(0.5f, 0.0f, 0.0f));
+			Position(0.5f, 0.0f, 0.0f), mWind);
 	WindTurbine wt4 = WindTurbine(ColorPalette::yellow(),
-			Position(-0.3f, 0.0f, -0.0f));
+			Position(-0.3f, 0.0f, -0.0f), mWind);
 	WindTurbine wt5 = WindTurbine(ColorPalette::white(),
-			Position(-0.5f, 0.0f, -0.0f));
+			Position(-0.5f, 0.0f, -0.0f), mWind);
 	// Add them all to out windturbine list
 	mWindTurbineList.push_back(wt1);
 	mWindTurbineList.push_back(wt2);

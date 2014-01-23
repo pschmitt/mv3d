@@ -14,6 +14,8 @@ Camera::Camera(Position pos, Position target) {
 	mPosition = pos;
 	mTarget = target;
 	mAngle = 0.0f;
+	// Save original Z position (will be used to update the position when rotating around the scene)
+	mInitialDistanceFromScene = pos.z();
 }
 
 Camera::~Camera() {
@@ -24,14 +26,14 @@ void Camera::increase_angle() {
 	mAngle += ANGLE_STEPS;
 	correct_angle();
 	update_position();
-	mPosition.set_z(mPosition.z() + 0.01);
+	// mPosition.set_z(mPosition.z() + 0.01);
 }
 
 void Camera::decrease_angle() {
 	mAngle -= ANGLE_STEPS;
 	correct_angle();
 	update_position();
-	mPosition.set_z(mPosition.z() - 0.01);
+	// mPosition.set_z(mPosition.z() - 0.01);
 }
 
 float Camera::angle() const {
@@ -59,7 +61,6 @@ void Camera::set_target(const Position& target) {
 }
 
 void Camera::correct_angle() {
-	// mAngle = fmod(mAngle, 360.0);
 	if (mAngle > 360.0){
 		mAngle -= 360.0;
 	} else if (mAngle < 0.0) {
@@ -67,24 +68,25 @@ void Camera::correct_angle() {
 	}
 }
 
+/**
+ * http://stackoverflow.com/a/14920699
+ */
 inline double to_degrees(double radians) {
     return radians*(180.0/M_PI);
 }
 
 void Camera::update_position() {
 	// http://stackoverflow.com/questions/14121377/opengl-rotate-camera-around-center-of-scene
-	// x = radius * sin(angle) + zCenterOfScene*
-	// z = radius * cos(angle) + zCenterOfScene*
-	/*
-	mPosition.set_x(10.0 * sin(mAngle) + 10.0);
-	mPosition.set_z(-10.0 * cos(mAngle) - 10.0);
-	*/
+	// x = radius * sin(angle) + zCenterOfScene
+	// z = radius * cos(angle) + zCenterOfScene
+	mPosition.set_x(mInitialDistanceFromScene * sin(mAngle) + mInitialDistanceFromScene);
+	mPosition.set_z(mInitialDistanceFromScene * cos(mAngle) + mInitialDistanceFromScene);
 }
 
 void Camera::update() {
 	// RTFM: http://www.opengl.org/sdk/docs/man2/xhtml/gluLookAt.xml
 	// Last 3 parameters: Specifies the direction of the up vector.
-
+	glLoadIdentity();
 	gluLookAt(mPosition.x(), mPosition.y(), mPosition.z(), mTarget.x(),
 			mTarget.y(), mTarget.z(), 0, 1, 0);
 }

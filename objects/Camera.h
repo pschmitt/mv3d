@@ -12,7 +12,7 @@
 #include "Position.h"
 
 // #define ROTATION_RADIUS 20.0f;
-#define ANGLE_STEPS 1.00f
+#define ANGLE_STEPS 0.01f
 
 namespace schmitt_co {
 
@@ -37,6 +37,7 @@ class Camera {
 		float mAngle;
 		void update_position();
 		void correct_angle();
+		GLdouble mInitialDistanceFromScene;
 };
 
 } /* namespace schmitt_co */

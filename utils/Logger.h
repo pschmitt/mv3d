@@ -28,6 +28,7 @@ class Logger {
 		static void screenInfo();
 		static void log(std::list<WindTurbine>);
 		static void log(Camera cam);
+		static void log(Wind wind);
 		//static void logAll();
 	private:
 		Logger() {};
