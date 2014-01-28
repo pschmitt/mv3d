@@ -110,8 +110,8 @@ void idle() {
 		} else {
 			mCam.increase_angle();
 		}
-		glutPostRedisplay();
 	}
+	glutPostRedisplay();
 }
 
 void reshape(int width, int height) {

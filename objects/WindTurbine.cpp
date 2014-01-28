@@ -110,7 +110,7 @@ void WindTurbine::draw() {
 		// Start with the base, then the motor and the rotors
 		drawBase(quad);
 		drawMotor(quad);
-		double xxx = glutGet(GLUT_ELAPSED_TIME) / 1000.0 * mWind.strength();
+		double xxx = glutGet(GLUT_ELAPSED_TIME) /* / 1000.0*/ * mWind.glStrength();
 				glRotated(xxx, 0, 0, 1);
 		drawRotors(quad);
 	}

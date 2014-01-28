@@ -49,6 +49,24 @@ double Wind::glDirection() const {
 	return 0.0;
 }
 
+double Wind::glStrength() const {
+	switch (mStrength) {
+		case NONE:
+			return 0.0;
+			break;
+		case WEAK:
+			return 0.15;
+			break;
+		case NORMAL:
+			return 0.5;
+			break;
+		case STRONG:
+			return 1.0;
+			break;
+	}
+	return 0.0;
+}
+
 void Wind::next_direction() {
 	switch (mDirection) {
 		case NORTH:
