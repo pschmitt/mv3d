@@ -49,9 +49,7 @@ void WindTurbine::drawMotor(GLUquadric*& params) {
 	glPushMatrix();
 	{
 		glTranslated(0, 0, 0.28);
-		double xxx = glutGet(GLUT_ELAPSED_TIME) / 1000.0 * mWind.strength();
-		glRotated(xxx, 0, 0, 1);
-		glutSolidCone(0.1, 0.2, 50, 50);
+		// glutSolidCone(0.1, 0.2, 50, 50);
 		glutSolidTorus(0.05, 0.05, 10, 10);
 		glTranslated(0, 0, 0.05);
 	}
@@ -109,6 +107,8 @@ void WindTurbine::draw() {
 		// Start with the base, then the motor and the rotors
 		drawBase(params);
 		drawMotor(params);
+		double xxx = glutGet(GLUT_ELAPSED_TIME) / 1000.0 * mWind.strength();
+				glRotated(xxx, 0, 0, 1);
 		drawRotors(params);
 	}
 	glPopMatrix();

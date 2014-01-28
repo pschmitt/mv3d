@@ -9,6 +9,7 @@
 #define WIND_H_
 #include <ostream>
 #include "DrawableObject.h"
+#include "../utils/ColorPalette.h"
 
 namespace schmitt_co {
 

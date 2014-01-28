@@ -68,13 +68,6 @@ void Camera::correct_angle() {
 	}
 }
 
-/**
- * http://stackoverflow.com/a/14920699
- */
-inline double to_degrees(double radians) {
-    return radians*(180.0/M_PI);
-}
-
 void Camera::update_position() {
 	// http://stackoverflow.com/questions/14121377/opengl-rotate-camera-around-center-of-scene
 	// x = radius * sin(angle) + zCenterOfScene

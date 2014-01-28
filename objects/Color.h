@@ -28,6 +28,7 @@ class Color {
 		float r() const;
 		void set_r(float r);
 		const float* color();
+		const float* color(float alpha);
 	private:
 		std::string mName;
 		float rValue;

@@ -28,7 +28,36 @@ void Wind::draw() {
 		glTranslated(mPostion.x(), mPostion.y(), mPostion.z());
 		// Scale it properly
 		glScalef(mSize, mSize, mSize);
+		// TODO: Why isn't the direction working as expected?!
+		switch (mDirection) {
+			case NORTH:
+				glRotated(0, 0, 1, 0);
+				break;
+			case SOUTH:
+				glRotated(180, 0, 1, 0);
+				break;
+			case WEST:
+				glRotated(270, 0, 1, 0);
+				break;
+			case EAST:
+				glRotated(360, 0, 1, 0);
+				break;
+		}
 
+		switch (mStrength) {
+			case NONE:
+				glColor4fv(ColorPalette::white().color());
+				break;
+			case WEAK:
+				glColor4fv(ColorPalette::green().color());
+				break;
+			case NORMAL:
+				glColor4fv(ColorPalette::orange().color());
+				break;
+			case STRONG:
+				glColor4fv(ColorPalette::red().color());
+				break;
+		}
 		glPushMatrix();
 		{
 			gluCylinder(params, 0.025, 0.025, 0.2, 25, 25);
@@ -36,8 +65,9 @@ void Wind::draw() {
 		glPopMatrix();
 		glPushMatrix();
 		{
+			// Turn around so that we point in the right direction
 			glRotated(180, 0, 1, 0);
-			glutSolidCone(0.05, 0.15, 50, 50);
+			glutSolidCone(0.075, 0.15, 30, 30);
 		}
 		glPopMatrix();
 	}

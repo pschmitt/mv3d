@@ -61,12 +61,16 @@ void Color::set_r(float r) {
 }
 
 const float* Color::color() {
+	color(1.0f);
+}
+
+const float* Color::color(float alpha) {
 	// std::cout << rValue << " " << gValue << " " << bValue << std::endl;
 	float *color = (float*) calloc(4, sizeof(float));
 	color[0] = rValue;
 	color[1] = gValue;
 	color[2] = bValue;
-	color[3] = 1.0F;
+	color[3] = alpha;
 	return color;
 }
 
