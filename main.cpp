@@ -75,12 +75,12 @@ void setupWindow();
 
 /** End of function declaration **/
 
+/** Display functions **/
+
 void draw_object(DrawableObject& obj) {
 	std::cout << "Drawing object " << obj << std::endl;
 	obj.draw();
 }
-
-/** Display functions **/
 
 void display() {
 	// Clear
@@ -153,7 +153,7 @@ void zoomout(WindTurbine& wt) {
 
 /**
  * Zoom function
- * TODO Don't just increase object size
+ * TODO Don't just increase object size (is gluLookAt a better solution?)
  * TODO Reset function
  */
 void zoom(bool zoomIn) {
@@ -172,10 +172,8 @@ void zoom(bool zoomIn) {
 }
 
 /*// FreeGLUT only
- void mouseWheel(int wheel, int direction, int x, int y) {
-
- }
- */
+void mouseWheel(int wheel, int direction, int x, int y) {}
+*/
 
 void mousePress(int button, int state, int x, int y) {
 	switch (button) {
