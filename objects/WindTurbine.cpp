@@ -41,7 +41,7 @@ void WindTurbine::drawMotor(GLUquadric*& quad) {
 		glTranslated(0, 0, 0.19);
 		glutSolidTorus(0.075, 0.075, 15, 15);
 		glTranslated(0, 0, -0.53);
-		gluCylinder(quad, 0.15, 0.15, 0.55, 60, 60);
+		gluCylinder(quad, 0.15, 0.25, 0.55, 60, 60);
 		glTranslated(0, 0, 0.035);
 		glutSolidTorus(0.068, 0.068, 20, 20);
 	}
@@ -84,7 +84,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 	// Third rotor
 	glPushMatrix();
 	{
-		glTranslated(-1.38, -0.62, 0.02);
+		glTranslated(-1.375, -0.62, 0.02);
 		// TODO: simplify these 3 successive rotations
 		glRotated(90, 0, 1, 0);
 		glRotated(-25, 1, 0, 0);
