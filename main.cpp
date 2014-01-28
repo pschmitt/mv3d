@@ -237,10 +237,12 @@ void keyPress(unsigned char key, int x, int y) {
 		case 's':
 			mWind.next_strength();
 			updateWindTurbines();
+			glutPostRedisplay();
 			break;
 		case 'd':
 			mWind.next_direction();
 			updateWindTurbines();
+			glutPostRedisplay();
 			break;
 		case 'q':
 		case 27: // ESC
@@ -334,8 +336,13 @@ void setupMenu() {
 // Wind direction
 	int windDirMenu = glutCreateMenu(menuSelect);
 	glutAddMenuEntry(MENU_WIND_NORTH, MENU_WIND_NORTH_ID);
-	glutAddMenuEntry(MENU_WIND_SOUTH, MENU_WIND_STRONG_ID);
+	glutAddMenuEntry(MENU_WIND_NORTH_EAST, MENU_WIND_NORTH_EAST_ID);
 	glutAddMenuEntry(MENU_WIND_EAST, MENU_WIND_EAST_ID);
+	glutAddMenuEntry(MENU_WIND_SOUTH_EAST, MENU_WIND_SOUTH_EAST_ID);
+	glutAddMenuEntry(MENU_WIND_SOUTH, MENU_WIND_SOUTH_ID);
+	glutAddMenuEntry(MENU_WIND_SOUTH_WEST, MENU_WIND_SOUTH_WEST_ID);
+	glutAddMenuEntry(MENU_WIND_WEST, MENU_WIND_WEST_ID);
+	glutAddMenuEntry(MENU_WIND_NORTH_WEST, MENU_WIND_NORTH_WEST_ID);
 	glutAddMenuEntry(MENU_WIND_WEST, MENU_WIND_WEST_ID);
 // Wind strength
 	int windStrMenu = glutCreateMenu(menuSelect);

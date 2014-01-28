@@ -24,14 +24,26 @@ double Wind::glDirection() const {
 		case NORTH:
 			return 0.0;
 			break;
+		case NORTH_EAST:
+			return 45.0;
+			break;
+		case EAST:
+			return 90.0;
+			break;
+		case SOUTH_EAST:
+			return 135.0;
+			break;
 		case SOUTH:
 			return 180.0;
+			break;
+		case SOUTH_WEST:
+			return 225.0;
 			break;
 		case WEST:
 			return 270.0;
 			break;
-		case EAST:
-			return 90.0;
+		case NORTH_WEST:
+			return 315.0;
 			break;
 	}
 	return 0.0;
@@ -40,16 +52,28 @@ double Wind::glDirection() const {
 void Wind::next_direction() {
 	switch (mDirection) {
 		case NORTH:
+			mDirection = NORTH_EAST;
+			break;
+		case NORTH_EAST:
 			mDirection = EAST;
 			break;
-		case SOUTH:
-			break;
-			mDirection = WEST;
-		case WEST:
-			mDirection = NORTH;
-			break;
 		case EAST:
+			mDirection = SOUTH_EAST;
+			break;
+		case SOUTH_EAST:
 			mDirection = SOUTH;
+			break;
+		case SOUTH:
+			mDirection = SOUTH_WEST;
+			break;
+		case SOUTH_WEST:
+			mDirection = WEST;
+			break;
+		case WEST:
+			mDirection = NORTH_WEST;
+			break;
+		case NORTH_WEST:
+			mDirection = NORTH;
 			break;
 	}
 }
