@@ -37,10 +37,10 @@ void Wind::draw() {
 				glRotated(180, 0, 1, 0);
 				break;
 			case WEST:
-				glRotated(270, 0, 1, 0);
+				glRotated(270, 0, 1, 0); // or -90
 				break;
 			case EAST:
-				glRotated(360, 0, 1, 0);
+				glRotated(90, 0, 1, 0);
 				break;
 		}
 
