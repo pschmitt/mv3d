@@ -33,22 +33,33 @@ Color mColor = ColorPalette::white();
 Camera mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
 std::list<WindTurbine> mWindTurbineList;
 
+bool mMousePressed = false;
+int mLastX = -1;
+int mLastY = -1;
+int mCurrentX = -1;
+int mCurrentY = -1;
+
+bool mOptionAutoPilot = false;
+
 void draw_object(DrawableObject &obj) {
 	std::cout << "Drawing object " << obj << std::endl;
 	obj.draw();
 }
 
-void display_camera() {
-}
-
 void display() {
+	// Clear
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Draw
 	glPushMatrix();
-		glLoadIdentity ();
+	{
+		glLoadIdentity();
+
 		mCam.update();
 		Logger::log(mCam);
+		mWind.draw();
 		for_each(mWindTurbineList.begin(), mWindTurbineList.end(), draw_object);
+	}
 	glPopMatrix();
 
 	// http://www.delafond.org/traducmanfr/X11/man3/glFlush.3x.html
@@ -57,21 +68,48 @@ void display() {
 }
 
 void idle() {
-	// TODO
-	//mCam.update();
-	// glutPostRedisplay();
+	if (mOptionAutoPilot) {
+		mCam.increase_angle();
+		glutPostRedisplay();
+	}
 }
 
-void reshape(int w, int h) {
+void reshape(int width, int height) {
 	// TODO
 }
 
 void mousePress(int button, int state, int x, int y) {
-	// TODO
+	if (button == GLUT_LEFT_BUTTON) {
+		if (state == GLUT_DOWN) {
+			mMousePressed = true;
+			mLastX = x;
+			mLastY = y;
+		} else if (state == GLUT_UP) {
+			mMousePressed = false;
+			mLastX = mLastY = -1;
+			// TODO update cam ?
+			// mCam.set_angle(  * 0.01f)
+		}
+	}
+}
+
+void motionFunc(int x, int y) {
+	// std::cout << "x: " << x << "y: " << y << std::endl;
+	if (x < mLastX) {
+		mCam.decrease_angle();
+	} else {
+		mCam.increase_angle();
+	}
+	mLastX = x;
+	mLastY = y;
+	glutPostRedisplay();
 }
 
 void keyPress(unsigned char key, int x, int y) {
 	switch (key) {
+		case 'a':
+			mOptionAutoPilot = !mOptionAutoPilot;
+			break;
 		case 'q':
 		case 27: // ESC
 			exit(0);
@@ -107,7 +145,8 @@ void updateWindTurbine(WindTurbine& wt) {
  * Update all windturbines in our list to reflect user choices
  */
 void updateWindTurbines() {
-	for_each(mWindTurbineList.begin(), mWindTurbineList.end(), updateWindTurbine);
+	for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
+			updateWindTurbine);
 }
 
 void menuSelect(int selection) {
@@ -145,6 +184,9 @@ void menuSelect(int selection) {
 		case MENU_COLOR_BLACK_ID:
 			mColor = ColorPalette::black();
 			break;
+		case MENU_AUTO_PILOT_ID:
+			mOptionAutoPilot = !mOptionAutoPilot;
+			break;
 
 	}
 	updateWindTurbines();
@@ -153,6 +195,7 @@ void menuSelect(int selection) {
 
 void setupMouse() {
 	glutMouseFunc(mousePress);
+	glutMotionFunc(motionFunc);
 }
 
 void setupKeyboard() {
@@ -161,13 +204,13 @@ void setupKeyboard() {
 }
 
 void setupMenu() {
-	// Wind strength
+// Wind strength
 	int windMenu = glutCreateMenu(menuSelect);
 	glutAddMenuEntry(MENU_WIND_NONE, MENU_WIND_NONE_ID);
 	glutAddMenuEntry(MENU_WIND_WEAK, MENU_WIND_WEAK_ID);
 	glutAddMenuEntry(MENU_WIND_NORMAL, MENU_WIND_NORMAL_ID);
 	glutAddMenuEntry(MENU_WIND_STRONG, MENU_WIND_STRONG_ID);
-	// Colors
+// Colors
 	int colorMenu = glutCreateMenu(menuSelect);
 	glutAddMenuEntry(MENU_COLOR_RED, MENU_COLOR_RED_ID);
 	glutAddMenuEntry(MENU_COLOR_GREEN, MENU_COLOR_GREEN_ID);
@@ -175,18 +218,18 @@ void setupMenu() {
 	glutAddMenuEntry(MENU_COLOR_YELLOW, MENU_COLOR_YELLOW_ID);
 	glutAddMenuEntry(MENU_COLOR_WHITE, MENU_COLOR_WHITE_ID);
 	glutAddMenuEntry(MENU_COLOR_BLACK, MENU_COLOR_BLACK_ID);
-	// Main menu
+// Main menu
 	glutCreateMenu(menuSelect);
 	glutAddSubMenu(MENU_COLOR, colorMenu);
+// Auto pilot & quit
 	glutAddSubMenu(MENU_WIND, windMenu);
+	glutAddMenuEntry(MENU_AUTO_PILOT, MENU_AUTO_PILOT_ID);
 	glutAddMenuEntry(MENU_QUIT, MENU_QUIT_ID);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 void setupWorld() {
-	// Init camera
-	// mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
-	// Let's create 5 wind turbines
+// Let's create 5 wind turbines
 	WindTurbine wt1 = WindTurbine(ColorPalette::red(),
 			Position(0.0F, 0.0F, 0.0F), mWind);
 	WindTurbine wt2 = WindTurbine(ColorPalette::blue(),
@@ -197,7 +240,7 @@ void setupWorld() {
 			Position(-0.3f, 0.0f, -0.0f), mWind);
 	WindTurbine wt5 = WindTurbine(ColorPalette::white(),
 			Position(-0.5f, 0.0f, -0.0f), mWind);
-	// Add them all to out windturbine list
+// Add them all to out windturbine list
 	mWindTurbineList.push_back(wt1);
 	mWindTurbineList.push_back(wt2);
 	mWindTurbineList.push_back(wt3);
@@ -208,7 +251,7 @@ void setupWorld() {
 void debugInfo() {
 	Logger::screenInfo();
 	std::cout << "---" << std::endl;
-	// print wind turbine list to stdout
+// print wind turbine list to stdout
 	Logger::log(mWindTurbineList);
 }
 
@@ -228,13 +271,13 @@ void setupWindow() {
 
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
-	// http://www.opengl.org/documentation/specs/glut/spec3/node12.html
-	// GLUT_RGBA: RGBA mode window
-	// GLUT_DOUBLE: Double buffered window
-	// GLUT_DEPTH: Window with a depth buffer
+// http://www.opengl.org/documentation/specs/glut/spec3/node12.html
+// GLUT_RGBA: RGBA mode window
+// GLUT_DOUBLE: Double buffered window
+// GLUT_DEPTH: Window with a depth buffer
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-	// GL_DEPTH_TEST: do depth comparisons and update the depth buffer
-	// http://www.opengl.org/sdk/docs/man/xhtml/glEnable.xml
+// GL_DEPTH_TEST: do depth comparisons and update the depth buffer
+// http://www.opengl.org/sdk/docs/man/xhtml/glEnable.xml
 	glEnable(GL_DEPTH_TEST); // Do I need this?
 	setupWindow();
 	glutReshapeFunc(reshape);

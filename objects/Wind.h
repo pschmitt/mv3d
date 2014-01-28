@@ -18,9 +18,9 @@ class Wind : public DrawableObject {
 			NONE = 0, WEAK, NORMAL, STRONG
 		};
 		enum Direction {
-			NORTH = 0, SOUTH, WEST, EAST
+			NORTH = 1, SOUTH, WEST, EAST
 		};
-		Wind();
+		Wind(Strength strength = NONE, Direction direction = NORTH);
 		virtual ~Wind();
 		void draw();
 		Direction direction() const {

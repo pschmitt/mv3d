@@ -84,9 +84,9 @@ void Camera::update_position() {
 }
 
 void Camera::update() {
+	// glLoadIdentity(); // Fresh start
 	// RTFM: http://www.opengl.org/sdk/docs/man2/xhtml/gluLookAt.xml
 	// Last 3 parameters: Specifies the direction of the up vector.
-	glLoadIdentity();
 	gluLookAt(mPosition.x(), mPosition.y(), mPosition.z(), mTarget.x(),
 			mTarget.y(), mTarget.z(), 0, 1, 0);
 }
