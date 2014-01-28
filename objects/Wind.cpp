@@ -37,6 +37,40 @@ double Wind::glDirection() const {
 	return 0.0;
 }
 
+void Wind::next_direction() {
+	switch (mDirection) {
+		case NORTH:
+			mDirection = EAST;
+			break;
+		case SOUTH:
+			break;
+			mDirection = WEST;
+		case WEST:
+			mDirection = NORTH;
+			break;
+		case EAST:
+			mDirection = SOUTH;
+			break;
+	}
+}
+
+void Wind::next_strength() {
+	switch (mStrength) {
+		case NONE:
+			mStrength = WEAK;
+			break;
+		case WEAK:
+			mStrength = NORMAL;
+			break;
+		case NORMAL:
+			mStrength = STRONG;
+			break;
+		case STRONG:
+			mStrength = NONE;
+			break;
+	}
+}
+
 void Wind::draw() {
 	GLUquadric* quad = gluNewQuadric();
 	glColor4fv(mColor.color());

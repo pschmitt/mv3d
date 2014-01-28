@@ -28,11 +28,6 @@
 
 using namespace schmitt_co;
 
-Wind mWind = Wind();
-Color mColor = ColorPalette::white();
-Camera mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
-std::list<WindTurbine> mWindTurbineList;
-
 bool mMousePressed = false;
 int mLastX = -1;
 int mLastY = -1;
@@ -41,10 +36,46 @@ int mCurrentY = -1;
 
 bool mOptionAutoPilot = false;
 
-void draw_object(DrawableObject &obj) {
+/** Object initialization **/
+
+Wind mWind = Wind();
+// Default color (white) // TODO: respect different object colors (windmills)
+Color mColor = ColorPalette::white();
+Camera mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
+std::list<WindTurbine> mWindTurbineList;
+
+/** End of object initialization **/
+
+
+/** Function declarations **/
+
+void draw_object(DrawableObject& obj);
+void display();
+void idle();
+void reshape(int width, int height);
+void zoomin(WindTurbine& wt);
+void zoomout(WindTurbine& wt);
+void zoom(bool zoomIn);
+void mousePress(int button, int state, int x, int y);
+void motionFunc(int x, int y);
+void keyPress(unsigned char key, int x, int y);
+void specialKeyPress(int key, int x, int y);
+void updateWindTurbine(WindTurbine& wt);
+void menuSelect(int selection);
+void setupMouse();
+void setupKeyboard();
+void setupMenu();
+void debugInfo();
+void setupWindow();
+
+/** End of function declaration **/
+
+void draw_object(DrawableObject& obj) {
 	std::cout << "Drawing object " << obj << std::endl;
 	obj.draw();
 }
+
+/** Display functions **/
 
 void display() {
 	// Clear
@@ -77,6 +108,27 @@ void reshape(int width, int height) {
 	// TODO
 }
 
+/** End of display functions **/
+
+
+/**
+ * Updates a single wind turbine
+ */
+void updateWindTurbine(WindTurbine& wt) {
+	wt.set_wind(mWind);
+	wt.set_color(mColor);
+}
+
+/**
+ * Update all windturbines in our list to reflect user choices
+ */
+void updateWindTurbines() {
+	for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
+			updateWindTurbine);
+}
+
+/** Mouse functions **/
+
 void zoomin(WindTurbine& wt) {
 	wt.set_size(wt.size() + 0.1);
 	glutPostRedisplay();
@@ -90,6 +142,11 @@ void zoomout(WindTurbine& wt) {
 	}
 }
 
+/**
+ * Zoom function
+ * TODO Don't just increase object size
+ * TODO Reset function
+ */
 void zoom(bool zoomIn) {
 	if (zoomIn) {
 		for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
@@ -104,6 +161,12 @@ void zoom(bool zoomIn) {
 		}
 	}
 }
+
+/*// FreeGLUT only
+ void mouseWheel(int wheel, int direction, int x, int y) {
+
+ }
+ */
 
 void mousePress(int button, int state, int x, int y) {
 	switch (button) {
@@ -142,11 +205,29 @@ void motionFunc(int x, int y) {
 	mLastY = y;
 	glutPostRedisplay();
 }
+void setupMouse() {
+	glutMouseFunc(mousePress);
+	glutMotionFunc(motionFunc);
+// FreeGLUT only...
+// glutMouseWheelFunc(mouseWheel);
+}
+
+/** End of mouse functions **/
+
+/** Keyboard functions **/
 
 void keyPress(unsigned char key, int x, int y) {
 	switch (key) {
 		case 'a':
 			mOptionAutoPilot = !mOptionAutoPilot;
+			break;
+		case 's':
+			mWind.next_strength();
+			updateWindTurbines();
+			break;
+		case 'd':
+			mWind.next_direction();
+			updateWindTurbines();
 			break;
 		case 'q':
 		case 27: // ESC
@@ -171,21 +252,14 @@ void specialKeyPress(int key, int x, int y) {
 	glutPostRedisplay();
 }
 
-/**
- * Updates a single wind turbine
- */
-void updateWindTurbine(WindTurbine& wt) {
-	wt.set_wind(mWind);
-	wt.set_color(mColor);
+void setupKeyboard() {
+	glutKeyboardFunc(keyPress);
+	glutSpecialFunc(specialKeyPress);
 }
 
-/**
- * Update all windturbines in our list to reflect user choices
- */
-void updateWindTurbines() {
-	for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
-			updateWindTurbine);
-}
+/** End of keyboard functions **/
+
+/** Menu functions **/
 
 void menuSelect(int selection) {
 	switch (selection) {
@@ -243,18 +317,6 @@ void menuSelect(int selection) {
 	glutPostRedisplay();
 }
 
-void setupMouse() {
-	glutMouseFunc(mousePress);
-	glutMotionFunc(motionFunc);
-// FreeGLUT only...
-// glutMouseWheelFunc(mouseWheel);
-}
-
-void setupKeyboard() {
-	glutKeyboardFunc(keyPress);
-	glutSpecialFunc(specialKeyPress);
-}
-
 void setupMenu() {
 // Wind direction
 	int windDirMenu = glutCreateMenu(menuSelect);
@@ -286,6 +348,8 @@ void setupMenu() {
 	glutAddMenuEntry(MENU_QUIT, MENU_QUIT_ID);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
+
+/** End of menu functions **/
 
 void setupWorld() {
 // Let's create 5 wind turbines
@@ -332,12 +396,6 @@ void setupWindow() {
 				(glutGet(GLUT_SCREEN_HEIGHT) - WINDOW_HEIGHT) / 2);
 	}
 }
-
-/*
- void mouseWheel(int wheel, int direction, int x, int y) {
-
- }
- */
 
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
