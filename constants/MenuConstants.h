@@ -9,11 +9,16 @@
 #define MENUCONSTANTS_H_
 
 // Menu strings
-#define MENU_WIND "Wind Strength"
+#define MENU_WIND_STR "Wind Strength"
 #define MENU_WIND_NONE "None"
 #define MENU_WIND_WEAK "Weak"
 #define MENU_WIND_NORMAL "Normal"
 #define MENU_WIND_STRONG "Strong"
+#define MENU_WIND_DIR "Wind direction"
+#define MENU_WIND_NORTH "North"
+#define MENU_WIND_SOUTH "South"
+#define MENU_WIND_EAST "East"
+#define MENU_WIND_WEST "West"
 #define MENU_COLOR "Color"
 #define MENU_COLOR_RED "Red"
 #define MENU_COLOR_GREEN "Green"
@@ -31,6 +36,10 @@ enum {
 	MENU_WIND_WEAK_ID,
 	MENU_WIND_NORMAL_ID,
 	MENU_WIND_STRONG_ID,
+	MENU_WIND_NORTH_ID,
+	MENU_WIND_SOUTH_ID,
+	MENU_WIND_WEST_ID,
+	MENU_WIND_EAST_ID,
 	MENU_COLOR_RED_ID,
 	MENU_COLOR_BLUE_ID,
 	MENU_COLOR_GREEN_ID,

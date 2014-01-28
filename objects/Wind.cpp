@@ -20,9 +20,26 @@ Wind::~Wind() {
 }
 
 void Wind::draw() {
+	GLUquadric* params = gluNewQuadric();
+	glColor4fv(mColor.color());
 	glPushMatrix();
 	{
+		// Let's start drawing at the wind's position
+		glTranslated(mPostion.x(), mPostion.y(), mPostion.z());
+		// Scale it properly
+		glScalef(mSize, mSize, mSize);
 
+		glPushMatrix();
+		{
+			gluCylinder(params, 0.025, 0.025, 0.2, 25, 25);
+		}
+		glPopMatrix();
+		glPushMatrix();
+		{
+			glRotated(180, 0, 1, 0);
+			glutSolidCone(0.05, 0.15, 50, 50);
+		}
+		glPopMatrix();
 	}
 	glPopMatrix();
 }

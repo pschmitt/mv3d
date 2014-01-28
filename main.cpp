@@ -53,8 +53,7 @@ void display() {
 	// Draw
 	glPushMatrix();
 	{
-		glLoadIdentity();
-
+		glLoadIdentity(); // Start from origin
 		mCam.update();
 		Logger::log(mCam);
 		mWind.draw();
@@ -63,7 +62,7 @@ void display() {
 	glPopMatrix();
 
 	// http://www.delafond.org/traducmanfr/X11/man3/glFlush.3x.html
-	// glFlush();
+	// glFlush(); // ?
 	glutSwapBuffers(); // swap buffers, otherwise we won't see anything
 }
 
@@ -154,6 +153,18 @@ void menuSelect(int selection) {
 		case MENU_QUIT_ID:
 			exit(0);
 			break;
+		case MENU_WIND_NORTH_ID:
+			mWind.set_direction(Wind::NORTH);
+			break;
+		case MENU_WIND_SOUTH_ID:
+			mWind.set_direction(Wind::SOUTH);
+			break;
+		case MENU_WIND_WEST_ID:
+			mWind.set_direction(Wind::WEST);
+			break;
+		case MENU_WIND_EAST_ID:
+			mWind.set_direction(Wind::EAST);
+			break;
 		case MENU_WIND_NONE_ID:
 			mWind.set_strength(Wind::NONE);
 			break;
@@ -204,8 +215,14 @@ void setupKeyboard() {
 }
 
 void setupMenu() {
+// Wind direction
+	int windDirMenu = glutCreateMenu(menuSelect);
+	glutAddMenuEntry(MENU_WIND_NORTH, MENU_WIND_NORTH_ID);
+	glutAddMenuEntry(MENU_WIND_SOUTH, MENU_WIND_STRONG_ID);
+	glutAddMenuEntry(MENU_WIND_EAST, MENU_WIND_EAST_ID);
+	glutAddMenuEntry(MENU_WIND_WEST, MENU_WIND_WEST_ID);
 // Wind strength
-	int windMenu = glutCreateMenu(menuSelect);
+	int windStrMenu = glutCreateMenu(menuSelect);
 	glutAddMenuEntry(MENU_WIND_NONE, MENU_WIND_NONE_ID);
 	glutAddMenuEntry(MENU_WIND_WEAK, MENU_WIND_WEAK_ID);
 	glutAddMenuEntry(MENU_WIND_NORMAL, MENU_WIND_NORMAL_ID);
@@ -221,8 +238,9 @@ void setupMenu() {
 // Main menu
 	glutCreateMenu(menuSelect);
 	glutAddSubMenu(MENU_COLOR, colorMenu);
+	glutAddSubMenu(MENU_WIND_STR, windStrMenu);
+	glutAddSubMenu(MENU_WIND_DIR, windDirMenu);
 // Auto pilot & quit
-	glutAddSubMenu(MENU_WIND, windMenu);
 	glutAddMenuEntry(MENU_AUTO_PILOT, MENU_AUTO_PILOT_ID);
 	glutAddMenuEntry(MENU_QUIT, MENU_QUIT_ID);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -246,6 +264,11 @@ void setupWorld() {
 	mWindTurbineList.push_back(wt3);
 	mWindTurbineList.push_back(wt4);
 	mWindTurbineList.push_back(wt5);
+
+	// Wind
+	mWind.set_position(Position(0.0f, 0.3f, 0.0f));
+	mWind.set_color(ColorPalette::yellow());
+	mWind.set_size(1.0f);
 }
 
 void debugInfo() {
