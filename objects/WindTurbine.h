@@ -24,9 +24,9 @@ class WindTurbine : public DrawableObject {
 		const Wind& wind() const;
 		void set_wind(const Wind& wind);
 	private:
-		void drawBase(GLUquadric*& params);
-		void drawMotor(GLUquadric*& params);
-		void drawRotors(GLUquadric*& params);
+		void drawBase(GLUquadric*& quad);
+		void drawMotor(GLUquadric*& quad);
+		void drawRotors(GLUquadric*& quad);
 		Wind mWind;
 };
 

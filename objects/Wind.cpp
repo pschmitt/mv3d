@@ -19,8 +19,26 @@ Wind::~Wind() {
 	// TODO Auto-generated destructor stub
 }
 
+double Wind::glDirection() const {
+	switch (mDirection) {
+		case NORTH:
+			return 0.0;
+			break;
+		case SOUTH:
+			return 180.0;
+			break;
+		case WEST:
+			return 270.0;
+			break;
+		case EAST:
+			return 90.0;
+			break;
+	}
+	return 0.0;
+}
+
 void Wind::draw() {
-	GLUquadric* params = gluNewQuadric();
+	GLUquadric* quad = gluNewQuadric();
 	glColor4fv(mColor.color());
 	glPushMatrix();
 	{
@@ -29,20 +47,7 @@ void Wind::draw() {
 		// Scale it properly
 		glScalef(mSize, mSize, mSize);
 		// TODO: Why isn't the direction working as expected?!
-		switch (mDirection) {
-			case NORTH:
-				glRotated(0, 0, 1, 0);
-				break;
-			case SOUTH:
-				glRotated(180, 0, 1, 0);
-				break;
-			case WEST:
-				glRotated(270, 0, 1, 0); // or -90
-				break;
-			case EAST:
-				glRotated(90, 0, 1, 0);
-				break;
-		}
+		glRotated(glDirection(), 0, 1, 0);
 
 		switch (mStrength) {
 			case NONE:
@@ -60,14 +65,14 @@ void Wind::draw() {
 		}
 		glPushMatrix();
 		{
-			gluCylinder(params, 0.025, 0.025, 0.2, 25, 25);
+			gluCylinder(quad, 0.02, 0.02, 0.2, 25, 25);
 		}
 		glPopMatrix();
 		glPushMatrix();
 		{
 			// Turn around so that we point in the right direction
 			glRotated(180, 0, 1, 0);
-			glutSolidCone(0.075, 0.15, 30, 30);
+			glutSolidCone(0.07, 0.15, 25, 25);
 		}
 		glPopMatrix();
 	}

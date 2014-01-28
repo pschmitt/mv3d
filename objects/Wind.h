@@ -28,6 +28,8 @@ class Wind : public DrawableObject {
 			return mDirection;
 		}
 
+		double glDirection() const;
+
 		void set_direction(Direction direction = NORTH) {
 			mDirection = direction;
 		}

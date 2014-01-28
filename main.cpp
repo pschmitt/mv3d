@@ -77,23 +77,62 @@ void reshape(int width, int height) {
 	// TODO
 }
 
-void mousePress(int button, int state, int x, int y) {
-	if (button == GLUT_LEFT_BUTTON) {
-		if (state == GLUT_DOWN) {
-			mMousePressed = true;
-			mLastX = x;
-			mLastY = y;
-		} else if (state == GLUT_UP) {
-			mMousePressed = false;
-			mLastX = mLastY = -1;
-			// TODO update cam ?
-			// mCam.set_angle(  * 0.01f)
+void zoomin(WindTurbine& wt) {
+	wt.set_size(wt.size() + 0.1);
+	glutPostRedisplay();
+}
+
+void zoomout(WindTurbine& wt) {
+	float current_size = wt.size();
+	if (current_size - 0.1 > 0.1) {
+		wt.set_size(wt.size() - 0.1);
+		glutPostRedisplay();
+	}
+}
+
+void zoom(bool zoomIn) {
+	if (zoomIn) {
+		for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
+					zoomin);
+		mWind.set_size(mWind.size() + 0.1);
+	} else {
+		for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
+							zoomout);
+		float current_size = mWind.size();
+		if (current_size - 0.1 > 0.1) {
+			mWind.set_size(mWind.size() - 0.1);
 		}
 	}
 }
 
+void mousePress(int button, int state, int x, int y) {
+	switch (button) {
+		case GLUT_LEFT_BUTTON:
+			if (state == GLUT_DOWN) {
+				mMousePressed = true;
+				mLastX = x;
+				mLastY = y;
+			} else if (state == GLUT_UP) {
+				mMousePressed = false;
+				mLastX = mLastY = -1;
+				// TODO update cam ?
+				// mCam.set_angle(  * 0.01f)
+			}
+			break;
+			// http://stackoverflow.com/a/7885789
+		case 3:
+		case 4:
+			// Each wheel event reports like a button click, GLUT_DOWN then GLUT_UP
+			if (state == GLUT_UP) return; // Disregard redundant GLUT_UP events
+			// Scroll event
+			// std::cout << "Scroll" << std::endl;
+			zoom(button == 3);
+			break;
+	}
+}
+
 void motionFunc(int x, int y) {
-	// std::cout << "x: " << x << "y: " << y << std::endl;
+// std::cout << "x: " << x << "y: " << y << std::endl;
 	if (x < mLastX) {
 		mCam.decrease_angle();
 	} else {
@@ -207,6 +246,8 @@ void menuSelect(int selection) {
 void setupMouse() {
 	glutMouseFunc(mousePress);
 	glutMotionFunc(motionFunc);
+// FreeGLUT only...
+// glutMouseWheelFunc(mouseWheel);
 }
 
 void setupKeyboard() {
@@ -265,7 +306,7 @@ void setupWorld() {
 	mWindTurbineList.push_back(wt4);
 	mWindTurbineList.push_back(wt5);
 
-	// Wind
+// Wind
 	mWind.set_position(Position(0.0f, 0.3f, 0.0f));
 	mWind.set_color(ColorPalette::yellow());
 	mWind.set_size(1.0f);
@@ -291,6 +332,12 @@ void setupWindow() {
 				(glutGet(GLUT_SCREEN_HEIGHT) - WINDOW_HEIGHT) / 2);
 	}
 }
+
+/*
+ void mouseWheel(int wheel, int direction, int x, int y) {
+
+ }
+ */
 
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
