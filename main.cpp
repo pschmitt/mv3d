@@ -34,7 +34,12 @@ int mLastY = -1;
 int mCurrentX = -1;
 int mCurrentY = -1;
 
+/** Runtime options **/
+
 bool mOptionAutoPilot = false;
+bool mOptionAutoPilotReverse = false;
+
+/** End of runtime options **/
 
 /** Object initialization **/
 
@@ -99,7 +104,11 @@ void display() {
 
 void idle() {
 	if (mOptionAutoPilot) {
-		mCam.increase_angle();
+		if (mOptionAutoPilotReverse) {
+			mCam.decrease_angle();
+		} else {
+			mCam.increase_angle();
+		}
 		glutPostRedisplay();
 	}
 }
@@ -220,6 +229,10 @@ void keyPress(unsigned char key, int x, int y) {
 	switch (key) {
 		case 'a':
 			mOptionAutoPilot = !mOptionAutoPilot;
+			break;
+		case 'A':
+			mOptionAutoPilot = true;
+			mOptionAutoPilotReverse = !mOptionAutoPilotReverse;
 			break;
 		case 's':
 			mWind.next_strength();
