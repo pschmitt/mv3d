@@ -38,6 +38,7 @@ int mCurrentY = -1;
 
 bool mOptionAutoPilot = false;
 bool mOptionAutoPilotReverse = false;
+bool mPreserveOriginalWindMillColors = true;
 
 /** End of runtime options **/
 
@@ -125,7 +126,9 @@ void reshape(int width, int height) {
  */
 void updateWindTurbine(WindTurbine& wt) {
 	wt.set_wind(mWind);
-	wt.set_color(mColor);
+	if (!mPreserveOriginalWindMillColors) {
+		wt.set_color(mColor);
+	}
 }
 
 /**
@@ -195,7 +198,6 @@ void mousePress(int button, int state, int x, int y) {
 			// Each wheel event reports like a button click, GLUT_DOWN then GLUT_UP
 			if (state == GLUT_UP) return; // Disregard redundant GLUT_UP events
 			// Scroll event
-			// std::cout << "Scroll" << std::endl;
 			zoom(button == 3);
 			break;
 	}
@@ -241,6 +243,9 @@ void keyPress(unsigned char key, int x, int y) {
 			mWind.next_direction();
 			updateWindTurbines();
 			glutPostRedisplay();
+			break;
+		case 32: // SPACE
+			mOptionAutoPilot = !mOptionAutoPilot;
 			break;
 		case 'q':
 		case 27: // ESC
@@ -304,21 +309,27 @@ void menuSelect(int selection) {
 			mWind.set_strength(Wind::STRONG);
 			break;
 		case MENU_COLOR_RED_ID:
+			mPreserveOriginalWindMillColors = false;
 			mColor = ColorPalette::red();
 			break;
 		case MENU_COLOR_GREEN_ID:
+			mPreserveOriginalWindMillColors = false;
 			mColor = ColorPalette::green();
 			break;
 		case MENU_COLOR_BLUE_ID:
+			mPreserveOriginalWindMillColors = false;
 			mColor = ColorPalette::blue();
 			break;
 		case MENU_COLOR_YELLOW_ID:
+			mPreserveOriginalWindMillColors = false;
 			mColor = ColorPalette::yellow();
 			break;
 		case MENU_COLOR_WHITE_ID:
+			mPreserveOriginalWindMillColors = false;
 			mColor = ColorPalette::white();
 			break;
 		case MENU_COLOR_BLACK_ID:
+			mPreserveOriginalWindMillColors = false;
 			mColor = ColorPalette::black();
 			break;
 		case MENU_AUTO_PILOT_ID:
