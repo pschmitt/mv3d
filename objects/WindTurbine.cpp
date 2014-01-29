@@ -45,14 +45,15 @@ void WindTurbine::drawMotor(GLUquadric*& quad) {
 		gluCylinder(quad, 0.15, 0.25, 0.55, 60, 60);
 		glTranslated(0, 0, 0.035);
 		// Back of the motor
-		glutSolidTorus(0.08, 0.08, 20, 20);
+		// glutSolidTorus(0.08, 0.08, 20, 20);
+		glutSolidSphere(0.155, 60, 60);
 	}
 	glPopMatrix();
 
 	glPushMatrix();
 	{
 		glTranslated(0, 0, 0.28);
-		glutSolidTorus(0.05, 0.05, 10, 10);
+		glutSolidTorus(0.03, 0.03, 10, 10);
 		glTranslated(0, 0, 0.05);
 	}
 	glPopMatrix();

@@ -7,16 +7,30 @@
 
 #ifndef LIGHT_H_
 #define LIGHT_H_
+
 #include "DrawableObject.h"
+#include "Position.h"
 
 namespace schmitt_co {
 
-class Light : DrawableObject {
+class Light {
 	public:
-		Light();
+		Light(unsigned int lightId, Position pos);
 		virtual ~Light();
-		void draw();
-		std::ostream& print(std::ostream& out) const;
+		void lightUp();
+		void toggle();
+		void enable();
+		void disable();
+		bool enabled() const;
+		unsigned int lightid() const;
+		void set_lightid(unsigned int lightId);
+		const Position& pos() const;
+		void set_pos(const Position& pos);
+
+	private:
+		bool mEnabled;
+		Position mPos;
+		unsigned int mLightId;
 };
 
 } /* namespace schmitt_co */

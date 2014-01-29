@@ -31,6 +31,12 @@
 #define MENU_COLOR_WHITE "White"
 #define MENU_COLOR_BLACK "Black"
 #define MENU_AUTO_PILOT "Auto pilot"
+#define MENU_LIGHT "Lights"
+#define MENU_LIGTH1_ENABLE "Enable Light 1"
+#define MENU_LIGTH1_DISABLE "Disable Light 1"
+#define MENU_LIGTH2_ENABLE "Enable Light 2"
+#define MENU_LIGTH2_DISABLE "Disable Light 2"
+
 #define MENU_QUIT "Quit"
 
 enum {
@@ -54,6 +60,10 @@ enum {
 	MENU_COLOR_YELLOW_ID,
 	MENU_COLOR_WHITE_ID,
 	MENU_COLOR_BLACK_ID,
+	MENU_LIGTH1_ENABLE_ID,
+	MENU_LIGTH1_DISABLE_ID,
+	MENU_LIGTH2_ENABLE_ID,
+	MENU_LIGTH2_DISABLE_ID,
 	MENU_AUTO_PILOT_ID
 };
 

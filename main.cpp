@@ -22,6 +22,7 @@
 #include "utils/ColorPalette.h"
 #include "objects/DrawableObject.h"
 #include "objects/Camera.h"
+#include "objects/Light.h"
 #include "objects/Wind.h"
 #include "objects/WindTurbine.h"
 
@@ -38,6 +39,7 @@ int mCurrentX = -1;
 int mCurrentY = -1;
 
 bool mMousePressed = false;
+bool mOptionLight = true;
 bool mOptionAutoPilot = false;
 bool mOptionAutoPilotReverse = false;
 bool mPreserveOriginalWindMillColors = true;
@@ -52,6 +54,9 @@ Wind mWind = Wind();
 Color mColor = ColorPalette::white();
 Camera mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
 std::list<WindTurbine> mWindTurbineList;
+// Lights
+Light light1 = Light(GL_LIGHT0, Position());
+Light light2 = Light(GL_LIGHT1, Position());
 
 /** End of object initialization **/
 
@@ -114,7 +119,7 @@ void drawHelp() {
 }
 
 void drawWindInfo() {
-	// TODO
+	// TODO Adjust position
 	int xPos = 0.95;
 	void* font = GLUT_BITMAP_9_BY_15;
 	std::stringstream ss;
@@ -463,11 +468,18 @@ void setupMenu() {
 	glutAddMenuEntry(MENU_COLOR_YELLOW, MENU_COLOR_YELLOW_ID);
 	glutAddMenuEntry(MENU_COLOR_WHITE, MENU_COLOR_WHITE_ID);
 	glutAddMenuEntry(MENU_COLOR_BLACK, MENU_COLOR_BLACK_ID);
+// Lights
+	int lightMenu = glutCreateMenu(menuSelect);
+	glutAddMenuEntry(MENU_LIGTH1_ENABLE, MENU_LIGTH1_ENABLE_ID);
+	glutAddMenuEntry(MENU_LIGTH1_DISABLE, MENU_LIGTH1_ENABLE_ID);
+	glutAddMenuEntry(MENU_LIGTH2_ENABLE, MENU_LIGTH2_ENABLE_ID);
+	glutAddMenuEntry(MENU_LIGTH2_DISABLE, MENU_LIGTH2_DISABLE_ID);
 // Main menu
 	glutCreateMenu(menuSelect);
 	glutAddSubMenu(MENU_COLOR, colorMenu);
 	glutAddSubMenu(MENU_WIND_STR, windStrMenu);
 	glutAddSubMenu(MENU_WIND_DIR, windDirMenu);
+	glutAddSubMenu(MENU_LIGHT, lightMenu);
 // Auto pilot & quit
 	glutAddMenuEntry(MENU_AUTO_PILOT, MENU_AUTO_PILOT_ID);
 	glutAddMenuEntry(MENU_QUIT, MENU_QUIT_ID);
@@ -477,10 +489,12 @@ void setupMenu() {
 /** End of menu functions **/
 
 /** Lightning **/
-GLfloat lightpos[] = { 0.0, 0.0, 0.3, 0.0 };
+
 void setupLightning() {
+
+	// Don't touch this as it works!
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat mat_shininess[] = { 50.0 };
+	GLfloat mat_shininess[] = { 75.0 };
 	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_SMOOTH);
@@ -555,10 +569,9 @@ int main(int argc, char **argv) {
 // http://www.opengl.org/sdk/docs/man/xhtml/glEnable.xml
 	// glEnable(GL_DEPTH_TEST); // Do I need this?
 	// Enable blending (for transparency)
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// glEnable(GL_BLEND);
 	//glEnable(GL_POLYGON_STIPPLE);
-	setupLightning();
 	setupWindow();
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
@@ -567,6 +580,7 @@ int main(int argc, char **argv) {
 	setupMouse();
 	setupMenu();
 	setupWorld();
+	setupLightning();
 
 #ifdef DEBUG
 	debugInfo();
