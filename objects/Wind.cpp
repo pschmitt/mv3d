@@ -115,6 +115,11 @@ void Wind::draw() {
 		glPushMatrix();
 		{
 			gluCylinder(quad, 0.075, 0.075, 0.75, 30, 30);
+			// "Close" the arrow
+			glTranslated(0.0, 0.0, 0.75); // Move
+			glutSolidSphere(0.075, 20, 20);
+			glTranslated(0.0, 0.0, -0.75); // And get back
+
 		}
 		glPopMatrix();
 		glPushMatrix();

@@ -137,6 +137,8 @@ void display() {
 	// Draw text
 	glPushMatrix();
 	{
+		// Temporarily disable lighting
+		glDisable(GL_LIGHTING);
 		// Text should always be white
 		glColor4fv(ColorPalette::white().color());
 		// Draw help if desired
@@ -144,6 +146,8 @@ void display() {
 			drawHelp();
 		}
 		drawWindInfo();
+		// Reenable lighting
+		glEnable(GL_LIGHTING);
 	}
 	glPopMatrix();
 
@@ -433,10 +437,21 @@ void menuSelect(int selection) {
 			mPreserveOriginalWindMillColors = false;
 			mColor = ColorPalette::black();
 			break;
+		case MENU_LIGTH1_ENABLE_ID:
+			light1.enable();
+			break;
+		case MENU_LIGTH1_DISABLE_ID:
+			light1.disable();
+			break;
+		case MENU_LIGTH2_ENABLE_ID:
+			light2.enable();
+			break;
+		case MENU_LIGTH2_DISABLE_ID:
+			light2.disable();
+			break;
 		case MENU_AUTO_PILOT_ID:
 			mOptionAutoPilot = !mOptionAutoPilot;
 			break;
-
 	}
 	updateWindTurbines();
 	glutPostRedisplay();
@@ -491,6 +506,7 @@ void setupMenu() {
 /** Lightning **/
 
 void setupLightning() {
+	glEnable(GL_COLOR_MATERIAL);
 
 	// Don't touch this as it works!
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -531,7 +547,6 @@ void setupWorld() {
 	mWindTurbineList.push_back(wt3);
 	mWindTurbineList.push_back(wt4);
 	mWindTurbineList.push_back(wt5);
-
 // Wind
 	mWind.set_position(Position(0.0f, 0.3f, 0.0f));
 	mWind.set_color(ColorPalette::yellow());

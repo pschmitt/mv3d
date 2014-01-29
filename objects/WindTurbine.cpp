@@ -26,7 +26,6 @@ void WindTurbine::drawBase(GLUquadric*& quad) {
 		glRotated(90, 1, 0, 0);
 		gluCylinder(quad, 0.10, 0.15, 2.5, 60, 60);
 		glTranslated(0, 0, 2.5);
-		// TODO: The base looks ugly
 		glScalef(4.0 * mSize, 3.0 * mSize, 0.5 * mSize);
 		glutSolidCube(0.4);
 	}
@@ -39,21 +38,19 @@ void WindTurbine::drawMotor(GLUquadric*& quad) {
 
 	glPushMatrix();
 	{
-		glTranslated(0, 0, 0.2);
-		glutSolidTorus(0.075, 0.075, 15, 15);
+		glutSolidSphere(0.25, 40, 40);
 		glTranslated(0, 0, -0.53);
 		gluCylinder(quad, 0.15, 0.25, 0.55, 60, 60);
 		glTranslated(0, 0, 0.035);
 		// Back of the motor
-		// glutSolidTorus(0.08, 0.08, 20, 20);
 		glutSolidSphere(0.155, 60, 60);
 	}
 	glPopMatrix();
 
 	glPushMatrix();
 	{
-		glTranslated(0, 0, 0.28);
-		glutSolidTorus(0.03, 0.03, 10, 10);
+		glTranslated(0, 0, 0.20);
+		glutSolidCone(0.12, 0.12, 20, 20);
 		glTranslated(0, 0, 0.05);
 	}
 	glPopMatrix();
@@ -69,7 +66,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 		glTranslated(0, 1.5, 0.02);
 		glRotated(90, 1, 0, 0);
 		glScaled(0.7, 0.2, 0.5);
-		gluCylinder(quad, 0.0, 0.2, 3, 75, 75);
+		gluCylinder(quad, 0.0, 0.2, 3.0, 75, 75);
 	}
 	glPopMatrix();
 	// Second rotor
@@ -81,7 +78,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 		glRotated(-160, 1, 0, 0);
 		glRotated(50, 0, 0, 1);
 		glScaled(0.7, 0.2, 0.5);
-		gluCylinder(quad, 0, 0.2, 3, 75, 75);
+		gluCylinder(quad, 0.0, 0.2, 3.0, 75, 75);
 	}
 	glPopMatrix();
 	// Third rotor
@@ -93,7 +90,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 		glRotated(-25, 1, 0, 0);
 		glRotated(50, 0, 0, 1);
 		glScaled(0.7, 0.2, 0.5);
-		gluCylinder(quad, 0.0, 0.2, 3, 75, 75);
+		gluCylinder(quad, 0.0, 0.2, 3.0, 75, 75);
 	}
 	glPopMatrix();
 }
