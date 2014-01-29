@@ -52,7 +52,6 @@ std::list<WindTurbine> mWindTurbineList;
 
 /** End of object initialization **/
 
-
 /** Function declarations **/
 
 void draw_object(DrawableObject& obj);
@@ -114,12 +113,27 @@ void idle() {
 	glutPostRedisplay();
 }
 
-void reshape(int width, int height) {
-	// TODO
+// Source: http://stackoverflow.com/a/15779607
+void reshape(int windowWidth, int windowHeight) {
+	const float aspectRatio = ((float) windowWidth) / windowHeight;
+	double xSpan = 1.0; // Feel free to change this to any xSpan you need.
+	double ySpan = 1.0; // Feel free to change this to any ySpan you need.
+
+	if (aspectRatio > 1) {
+		// Width > Height, so scale xSpan accordingly.
+		xSpan *= aspectRatio;
+	} else {
+		// Height >= Width, so scale ySpan accordingly.
+		ySpan = xSpan / aspectRatio;
+	}
+
+	gluOrtho2D(-1.0 * xSpan, xSpan, -1.0 * ySpan, ySpan);
+
+	// Use the entire window for rendering.
+	glViewport(0, 0, windowWidth, windowHeight);
 }
 
 /** End of display functions **/
-
 
 /**
  * Updates a single wind turbine
@@ -161,12 +175,10 @@ void zoomout(WindTurbine& wt) {
  */
 void zoom(bool zoomIn) {
 	if (zoomIn) {
-		for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
-					zoomin);
+		for_each(mWindTurbineList.begin(), mWindTurbineList.end(), zoomin);
 		mWind.set_size(mWind.size() + 0.1);
 	} else {
-		for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
-							zoomout);
+		for_each(mWindTurbineList.begin(), mWindTurbineList.end(), zoomout);
 		float current_size = mWind.size();
 		if (current_size - 0.1 > 0.1) {
 			mWind.set_size(mWind.size() - 0.1);
@@ -175,8 +187,8 @@ void zoom(bool zoomIn) {
 }
 
 /*// FreeGLUT only
-void mouseWheel(int wheel, int direction, int x, int y) {}
-*/
+ void mouseWheel(int wheel, int direction, int x, int y) {}
+ */
 
 void mousePress(int button, int state, int x, int y) {
 	switch (button) {

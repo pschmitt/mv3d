@@ -38,12 +38,13 @@ void WindTurbine::drawMotor(GLUquadric*& quad) {
 
 	glPushMatrix();
 	{
-		glTranslated(0, 0, 0.19);
+		glTranslated(0, 0, 0.2);
 		glutSolidTorus(0.075, 0.075, 15, 15);
 		glTranslated(0, 0, -0.53);
 		gluCylinder(quad, 0.15, 0.25, 0.55, 60, 60);
 		glTranslated(0, 0, 0.035);
-		glutSolidTorus(0.068, 0.068, 20, 20);
+		// Back of the motor
+		glutSolidTorus(0.08, 0.08, 20, 20);
 	}
 	glPopMatrix();
 
@@ -58,7 +59,7 @@ void WindTurbine::drawMotor(GLUquadric*& quad) {
 
 void WindTurbine::drawRotors(GLUquadric*& quad) {
 	// TODO Move according to wind strength
-	glTranslated(0, 0, .3);
+	glTranslated(0, 0, 0.3);
 	// First rotor
 	glPushMatrix();
 	{
@@ -72,7 +73,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 	// Second rotor
 	glPushMatrix();
 	{
-		glTranslated(1.4, -0.527, 0.02);
+		glTranslated(1.4, -0.53, 0.02);
 		// TODO: simplify these 3 successive rotations
 		glRotated(90, 0, 1, 0);
 		glRotated(-160, 1, 0, 0);
@@ -84,7 +85,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 	// Third rotor
 	glPushMatrix();
 	{
-		glTranslated(-1.375, -0.62, 0.02);
+		glTranslated(-1.4, -0.6, 0.02);
 		// TODO: simplify these 3 successive rotations
 		glRotated(90, 0, 1, 0);
 		glRotated(-25, 1, 0, 0);
@@ -98,7 +99,8 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 void WindTurbine::draw() {
 	// http://www.opengl.org/sdk/docs/man2/xhtml/gluNewQuadric.xml
 	GLUquadric* quad = gluNewQuadric();
-	// gluQuadricDrawStyle(params, GLU_FILL);
+	// Set drawing style
+	// gluQuadricDrawStyle(quad, GLU_FILL);
 	// Set drawing color
 	glColor4fv(mColor.color());
 	glPushMatrix();
@@ -110,8 +112,7 @@ void WindTurbine::draw() {
 		// Start with the base, then the motor and the rotors
 		drawBase(quad);
 		drawMotor(quad);
-		double xxx = glutGet(GLUT_ELAPSED_TIME) /* / 1000.0*/ * mWind.glStrength();
-				glRotated(xxx, 0, 0, 1);
+		glRotated(glutGet(GLUT_ELAPSED_TIME) * mWind.glStrength(), 0, 0, 1);
 		drawRotors(quad);
 	}
 	glPopMatrix();
