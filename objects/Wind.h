@@ -8,6 +8,8 @@
 #ifndef WIND_H_
 #define WIND_H_
 #include <ostream>
+#include <string>
+
 #include "DrawableObject.h"
 #include "../utils/ColorPalette.h"
 
@@ -30,6 +32,8 @@ class Wind : public DrawableObject {
 
 		double glDirection() const;
 		double glStrength() const;
+		std::string print_direction() const;
+		std::string print_strength() const;
 		void next_direction();
 		void next_strength();
 		void set_direction(Direction direction = NORTH) {

@@ -12,6 +12,7 @@
 #include <list>
 #include <algorithm>
 #include <string>
+#include <sstream>
 
 #include "constants/DefaultConstants.h"
 #include "constants/MenuConstants.h"
@@ -29,14 +30,14 @@
 
 using namespace schmitt_co;
 
-bool mMousePressed = false;
+/** Runtime options **/
+
 int mLastX = -1;
 int mLastY = -1;
 int mCurrentX = -1;
 int mCurrentY = -1;
 
-/** Runtime options **/
-
+bool mMousePressed = false;
 bool mOptionAutoPilot = false;
 bool mOptionAutoPilotReverse = false;
 bool mPreserveOriginalWindMillColors = true;
@@ -47,7 +48,7 @@ bool mOptionShowHelp = true;
 /** Object initialization **/
 
 Wind mWind = Wind();
-// Default color (white) // TODO: respect different object colors (windmills)
+// Default color (white)
 Color mColor = ColorPalette::white();
 Camera mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
 std::list<WindTurbine> mWindTurbineList;
@@ -77,6 +78,9 @@ void setupKeyboard();
 void setupMenu();
 void debugInfo();
 void setupWindow();
+void setupLightning();
+void lightUp();
+void drawWindInfo();
 
 /** End of function declaration **/
 
@@ -100,11 +104,20 @@ void drawHelp() {
 	int xPos = -1;
 	void* font = GLUT_BITMAP_9_BY_15;
 	glutenPrint(xPos, 0.95, font, "Ctrl-0: Reload scene");
-	glutenPrint(xPos, 0.9,  font, "a     : Autopilot");
+	glutenPrint(xPos, 0.9, font, "a     : Autopilot");
 	glutenPrint(xPos, 0.85, font, "A     : Change autopilot rotation");
-	glutenPrint(xPos, 0.8,  font, "s     : Change wind strength");
-	glutenPrint(xPos, 0.7,  font, "d     : Change wind direction");
+	glutenPrint(xPos, 0.8, font, "s     : Change wind strength");
+	glutenPrint(xPos, 0.7, font, "d     : Change wind direction");
 	glutenPrint(xPos, 0.75, font, "h     : Toggle display help");
+}
+
+void drawWindInfo() {
+	// TODO
+	int xPos = 0.95;
+	void* font = GLUT_BITMAP_9_BY_15;
+	std::stringstream ss;
+	ss << mWind;
+	glutenPrint(xPos, 0.95, font, ss.str());
 }
 
 void display() {
@@ -120,6 +133,8 @@ void display() {
 		if (mOptionShowHelp) {
 			drawHelp();
 		}
+		drawWindInfo();
+		lightUp();
 		// Help text
 		mCam.update();
 #ifdef DEBUG
@@ -208,6 +223,9 @@ void resetZoom(WindTurbine& wt) {
 void resetScene() {
 	for_each(mWindTurbineList.begin(), mWindTurbineList.end(), resetZoom);
 	mWind.set_size(1.0f);
+	mCam.set_angle(0.0f);
+	// mCam.set_position(Position(0, 0, 0));
+	mOptionAutoPilot = mOptionAutoPilotReverse = false;
 	glutPostRedisplay();
 }
 
@@ -447,6 +465,39 @@ void setupMenu() {
 
 /** End of menu functions **/
 
+/** Lightning **/
+// GLfloat lightpos[] = { 0.0, 0.0, 0.3, 0.0 };
+void setupLightning() {
+	// TODO Do I need this?
+	// glEnable(GL_CULL_FACE);
+	// glCullFace(GL_BACK);
+	// Enable lighting
+	/* glEnable(GL_LIGHTING);
+	 glEnable(GL_LIGHT0);
+	 // GLfloat lightpos[] = {.5, 1., 1., 0.};
+	 lightUp();*/
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_shininess[] = { 50.0 };
+	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glShadeModel(GL_SMOOTH);
+
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
+}
+
+void lightUp() {
+	// glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+	// glMaterialfv(GL_FRONT, GL_DIFFUSE, ColorPalette::cyan().color());
+}
+
+/** End of lightning **/
+
 void setupWorld() {
 // Let's create 5 wind turbines
 	WindTurbine wt1 = WindTurbine(ColorPalette::red(),
@@ -503,6 +554,7 @@ int main(int argc, char **argv) {
 // GL_DEPTH_TEST: do depth comparisons and update the depth buffer
 // http://www.opengl.org/sdk/docs/man/xhtml/glEnable.xml
 	glEnable(GL_DEPTH_TEST); // Do I need this?
+	setupLightning();
 	setupWindow();
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);

@@ -129,10 +129,60 @@ void Wind::draw() {
 	glPopMatrix();
 }
 
+std::string Wind::print_strength() const {
+	std::string pretty = "None";
+	switch (mStrength) {
+			case NONE:
+				pretty = "None";
+				break;
+			case WEAK:
+				pretty = "Weak";
+				break;
+			case NORMAL:
+				pretty = "Normal";
+				break;
+			case STRONG:
+				pretty = "Strong";
+				break;
+		}
+	return pretty;
+}
+
+std::string Wind::print_direction() const {
+	std::string pretty = "None";
+	switch (mDirection) {
+		case NORTH:
+			pretty = "N";
+			break;
+		case NORTH_EAST:
+			pretty = "NE";
+			break;
+		case EAST:
+			pretty = "E";
+			break;
+		case SOUTH_EAST:
+			pretty = "SE";
+			break;
+		case SOUTH:
+			pretty = "S";
+			break;
+		case SOUTH_WEST:
+			pretty = "SW";
+			break;
+		case WEST:
+			pretty = "W";
+			break;
+		case NORTH_WEST:
+			pretty = "NW";
+			break;
+	}
+	return pretty;
+}
+
 std::ostream& Wind::print(std::ostream& out) const {
 	out << "[Wind] ";
-	out << "Direction: " << direction();
-	out << " Strength: " << strength();
+	out << "Direction: " << print_direction();
+	out << " Strength: " << print_strength();
 	return out;
 }
 
