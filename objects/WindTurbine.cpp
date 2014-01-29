@@ -23,10 +23,11 @@ WindTurbine::~WindTurbine() {
 void WindTurbine::drawBase(GLUquadric*& quad) {
 	glPushMatrix();
 	{
-		// glScalef(100 * mSize, 100* mSize, 100*mSize);
 		glRotated(90, 1, 0, 0);
 		gluCylinder(quad, 0.10, 0.15, 2.5, 60, 60);
 		glTranslated(0, 0, 2.5);
+		// TODO: The base looks ugly
+		glScalef(4.0 * mSize, 3.0 * mSize, 0.5 * mSize);
 		glutSolidCube(0.4);
 	}
 	glPopMatrix();
