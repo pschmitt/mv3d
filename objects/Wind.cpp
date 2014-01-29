@@ -89,7 +89,6 @@ void Wind::next_strength() {
 
 void Wind::draw() {
 	GLUquadric* quad = gluNewQuadric();
-	glColor4fv(mColor.color());
 	glPushMatrix();
 	{
 		// Let's start drawing at the wind's position
@@ -101,28 +100,28 @@ void Wind::draw() {
 
 		switch (mStrength) {
 			case NONE:
-				glColor4fv(ColorPalette::white().color());
+				glColor4fv(ColorPalette::white().color(0.5));
 				break;
 			case WEAK:
-				glColor4fv(ColorPalette::green().color());
+				glColor4fv(ColorPalette::green().color(0.5));
 				break;
 			case NORMAL:
-				glColor4fv(ColorPalette::orange().color());
+				glColor4fv(ColorPalette::orange().color(0.5));
 				break;
 			case STRONG:
-				glColor4fv(ColorPalette::red().color());
+				glColor4fv(ColorPalette::red().color(0.5));
 				break;
 		}
 		glPushMatrix();
 		{
-			gluCylinder(quad, 0.02, 0.02, 0.2, 25, 25);
+			gluCylinder(quad, 0.075, 0.075, 0.75, 30, 30);
 		}
 		glPopMatrix();
 		glPushMatrix();
 		{
 			// Turn around so that we point in the right direction
 			glRotated(180, 0, 1, 0);
-			glutSolidCone(0.07, 0.15, 25, 25);
+			glutSolidCone(0.21, 0.45, 30, 30);
 		}
 		glPopMatrix();
 	}

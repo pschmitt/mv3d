@@ -94,6 +94,7 @@ void drawObject(DrawableObject& obj) {
 }
 
 void glutenPrint(float x, float y, void* font, std::string text) {
+	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glRasterPos2f(x, y);
 	for (unsigned int i = 0; i < text.size(); i++) {
 		glutBitmapCharacter(font, text[i]);
@@ -109,6 +110,7 @@ void drawHelp() {
 	glutenPrint(xPos, 0.8, font, "s     : Change wind strength");
 	glutenPrint(xPos, 0.7, font, "d     : Change wind direction");
 	glutenPrint(xPos, 0.75, font, "h     : Toggle display help");
+	glutenPrint(xPos, 0.65, font, "q     : Quit");
 }
 
 void drawWindInfo() {
@@ -124,16 +126,25 @@ void display() {
 	// Clear
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Start from origin
+	glLoadIdentity();
 
-	// Draw
+	// Draw text
 	glPushMatrix();
 	{
-		glLoadIdentity(); // Start from origin
+		// Text should always be white
+		glColor4fv(ColorPalette::white().color());
 		// Draw help if desired
 		if (mOptionShowHelp) {
 			drawHelp();
 		}
 		drawWindInfo();
+	}
+	glPopMatrix();
+
+	// Draw objects
+	glPushMatrix();
+	{
 		lightUp();
 		// Help text
 		mCam.update();
@@ -146,7 +157,7 @@ void display() {
 	glPopMatrix();
 
 	// http://www.delafond.org/traducmanfr/X11/man3/glFlush.3x.html
-	// glFlush(); // ?
+	glFlush(); // ?
 	glutSwapBuffers(); // swap buffers, otherwise we won't see anything
 }
 
@@ -466,16 +477,8 @@ void setupMenu() {
 /** End of menu functions **/
 
 /** Lightning **/
-// GLfloat lightpos[] = { 0.0, 0.0, 0.3, 0.0 };
+GLfloat lightpos[] = { 0.0, 0.0, 0.3, 0.0 };
 void setupLightning() {
-	// TODO Do I need this?
-	// glEnable(GL_CULL_FACE);
-	// glCullFace(GL_BACK);
-	// Enable lighting
-	/* glEnable(GL_LIGHTING);
-	 glEnable(GL_LIGHT0);
-	 // GLfloat lightpos[] = {.5, 1., 1., 0.};
-	 lightUp();*/
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 50.0 };
 	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
@@ -492,8 +495,6 @@ void setupLightning() {
 }
 
 void lightUp() {
-	// glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-	// glMaterialfv(GL_FRONT, GL_DIFFUSE, ColorPalette::cyan().color());
 }
 
 /** End of lightning **/
@@ -520,7 +521,6 @@ void setupWorld() {
 // Wind
 	mWind.set_position(Position(0.0f, 0.3f, 0.0f));
 	mWind.set_color(ColorPalette::yellow());
-	mWind.set_size(1.0f);
 }
 
 void debugInfo() {
@@ -553,7 +553,11 @@ int main(int argc, char **argv) {
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 // GL_DEPTH_TEST: do depth comparisons and update the depth buffer
 // http://www.opengl.org/sdk/docs/man/xhtml/glEnable.xml
-	glEnable(GL_DEPTH_TEST); // Do I need this?
+	// glEnable(GL_DEPTH_TEST); // Do I need this?
+	// Enable blending (for transparency)
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	//glEnable(GL_POLYGON_STIPPLE);
 	setupLightning();
 	setupWindow();
 	glutReshapeFunc(reshape);

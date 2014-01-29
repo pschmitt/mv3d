@@ -74,7 +74,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 	// Second rotor
 	glPushMatrix();
 	{
-		glTranslated(1.4, -0.53, 0.02);
+		glTranslated(1.4, -0.6, 0.01);
 		// TODO: simplify these 3 successive rotations
 		glRotated(90, 0, 1, 0);
 		glRotated(-160, 1, 0, 0);
@@ -86,7 +86,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 	// Third rotor
 	glPushMatrix();
 	{
-		glTranslated(-1.4, -0.6, 0.02);
+		glTranslated(-1.4, -0.6, 0.01);
 		// TODO: simplify these 3 successive rotations
 		glRotated(90, 0, 1, 0);
 		glRotated(-25, 1, 0, 0);
@@ -102,10 +102,10 @@ void WindTurbine::draw() {
 	GLUquadric* quad = gluNewQuadric();
 	// Set drawing style
 	// gluQuadricDrawStyle(quad, GLU_FILL);
-	// Set drawing color
-	glColor4fv(mColor.color());
 	glPushMatrix();
 	{
+		// Set drawing color
+		glColor4fv(mColor.color());
 		// Let's start drawing at the windmill's position
 		glTranslated(mPostion.x(), mPostion.y(), mPostion.z());
 		// Scale it properly
