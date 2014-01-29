@@ -24,7 +24,7 @@
 #include "objects/WindTurbine.h"
 
 // debug mode
-#define DEBUG 1
+// #define DEBUG 1
 
 using namespace schmitt_co;
 
@@ -54,13 +54,15 @@ std::list<WindTurbine> mWindTurbineList;
 
 /** Function declarations **/
 
-void draw_object(DrawableObject& obj);
+void drawObject(DrawableObject& obj);
 void display();
 void idle();
 void reshape(int width, int height);
-void zoomin(WindTurbine& wt);
-void zoomout(WindTurbine& wt);
-void zoom(bool zoomIn);
+void resetScene();
+void resetZoom(WindTurbine& wt);
+void zoomIn(WindTurbine& wt);
+void zoomOut(WindTurbine& wt);
+void zoom(bool zoomingIn);
 void mousePress(int button, int state, int x, int y);
 void motionFunc(int x, int y);
 void keyPress(unsigned char key, int x, int y);
@@ -77,8 +79,10 @@ void setupWindow();
 
 /** Display functions **/
 
-void draw_object(DrawableObject& obj) {
+void drawObject(DrawableObject& obj) {
+#ifdef DEBUG
 	std::cout << "Drawing object " << obj << std::endl;
+#endif
 	obj.draw();
 }
 
@@ -91,9 +95,11 @@ void display() {
 	{
 		glLoadIdentity(); // Start from origin
 		mCam.update();
+#ifdef DEBUG
 		Logger::log(mCam);
+#endif
 		mWind.draw();
-		for_each(mWindTurbineList.begin(), mWindTurbineList.end(), draw_object);
+		for_each(mWindTurbineList.begin(), mWindTurbineList.end(), drawObject);
 	}
 	glPopMatrix();
 
@@ -155,12 +161,13 @@ void updateWindTurbines() {
 
 /** Mouse functions **/
 
-void zoomin(WindTurbine& wt) {
+
+void zoomIn(WindTurbine& wt) {
 	wt.set_size(wt.size() + 0.1);
 	glutPostRedisplay();
 }
 
-void zoomout(WindTurbine& wt) {
+void zoomOut(WindTurbine& wt) {
 	float current_size = wt.size();
 	if (current_size - 0.1 > 0.1) {
 		wt.set_size(wt.size() - 0.1);
@@ -168,17 +175,27 @@ void zoomout(WindTurbine& wt) {
 	}
 }
 
+void resetZoom(WindTurbine& wt) {
+	wt.set_size(0.1);
+}
+
+void resetScene() {
+	for_each(mWindTurbineList.begin(), mWindTurbineList.end(), resetZoom);
+	mWind.set_size(1.0f);
+	glutPostRedisplay();
+}
+
 /**
  * Zoom function
  * TODO Don't just increase object size (is gluLookAt a better solution?)
  * TODO Reset function
  */
-void zoom(bool zoomIn) {
-	if (zoomIn) {
-		for_each(mWindTurbineList.begin(), mWindTurbineList.end(), zoomin);
+void zoom(bool zoomingIn) {
+	if (zoomingIn) {
+		for_each(mWindTurbineList.begin(), mWindTurbineList.end(), zoomIn);
 		mWind.set_size(mWind.size() + 0.1);
 	} else {
-		for_each(mWindTurbineList.begin(), mWindTurbineList.end(), zoomout);
+		for_each(mWindTurbineList.begin(), mWindTurbineList.end(), zoomOut);
 		float current_size = mWind.size();
 		if (current_size - 0.1 > 0.1) {
 			mWind.set_size(mWind.size() - 0.1);
@@ -226,6 +243,7 @@ void motionFunc(int x, int y) {
 	mLastY = y;
 	glutPostRedisplay();
 }
+
 void setupMouse() {
 	glutMouseFunc(mousePress);
 	glutMotionFunc(motionFunc);
@@ -258,6 +276,14 @@ void keyPress(unsigned char key, int x, int y) {
 			break;
 		case 32: // SPACE
 			mOptionAutoPilot = !mOptionAutoPilot;
+			break;
+		case '0':
+			// Ctrl - 0
+			if (glutGetModifiers() & GLUT_ACTIVE_CTRL) {
+				std::cout << "RESET" << std::endl;
+				// Reset
+				resetScene();
+			}
 			break;
 		case 'q':
 		case 27: // ESC
