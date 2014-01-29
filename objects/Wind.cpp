@@ -20,33 +20,7 @@ Wind::~Wind() {
 }
 
 double Wind::glDirection() const {
-	switch (mDirection) {
-		case NORTH:
-			return 0.0;
-			break;
-		case NORTH_EAST:
-			return 45.0;
-			break;
-		case EAST:
-			return 90.0;
-			break;
-		case SOUTH_EAST:
-			return 135.0;
-			break;
-		case SOUTH:
-			return 180.0;
-			break;
-		case SOUTH_WEST:
-			return 225.0;
-			break;
-		case WEST:
-			return 270.0;
-			break;
-		case NORTH_WEST:
-			return 315.0;
-			break;
-	}
-	return 0.0;
+	return mDirection * 45.0;
 }
 
 double Wind::glStrength() const {
