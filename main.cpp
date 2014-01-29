@@ -119,7 +119,7 @@ void reshape(int windowWidth, int windowHeight) {
 	double xSpan = 1.0; // Feel free to change this to any xSpan you need.
 	double ySpan = 1.0; // Feel free to change this to any ySpan you need.
 
-	if (aspectRatio > 1) {
+	if (aspectRatio > 1.0) {
 		// Width > Height, so scale xSpan accordingly.
 		xSpan *= aspectRatio;
 	} else {
@@ -146,7 +146,7 @@ void updateWindTurbine(WindTurbine& wt) {
 }
 
 /**
- * Update all windturbines in our list to reflect user choices
+ * Update all wind turbines in our list to reflect user choices
  */
 void updateWindTurbines() {
 	for_each(mWindTurbineList.begin(), mWindTurbineList.end(),
@@ -239,19 +239,19 @@ void setupMouse() {
 
 void keyPress(unsigned char key, int x, int y) {
 	switch (key) {
-		case 'a':
+		case 'a': // Toggle auto pilot
 			mOptionAutoPilot = !mOptionAutoPilot;
 			break;
-		case 'A':
+		case 'A': // Change auto pilot direction
 			mOptionAutoPilot = true;
 			mOptionAutoPilotReverse = !mOptionAutoPilotReverse;
 			break;
-		case 's':
+		case 's': // Change wind strength
 			mWind.next_strength();
 			updateWindTurbines();
 			glutPostRedisplay();
 			break;
-		case 'd':
+		case 'd': // Change wind direction
 			mWind.next_direction();
 			updateWindTurbines();
 			glutPostRedisplay();
