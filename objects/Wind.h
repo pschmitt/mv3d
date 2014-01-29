@@ -19,7 +19,7 @@ class Wind : public DrawableObject {
 			NONE = 0, WEAK, NORMAL, STRONG
 		};
 		enum Direction {
-			NORTH = 1, SOUTH, WEST, EAST, NORTH_WEST, NORTH_EAST, SOUTH_WEST, SOUTH_EAST
+			NORTH = 0, SOUTH, WEST, EAST, NORTH_WEST, NORTH_EAST, SOUTH_WEST, SOUTH_EAST
 		};
 		Wind(Strength strength = NONE, Direction direction = NORTH);
 		virtual ~Wind();
