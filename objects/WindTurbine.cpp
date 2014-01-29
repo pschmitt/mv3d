@@ -67,7 +67,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 		glRotated(50, 0, 1, 0);
 		glTranslated(0, 1.5, 0.02);
 		glRotated(90, 1, 0, 0);
-		glScaled(0.4, 0.1, 0.5);
+		glScaled(0.7, 0.2, 0.5);
 		gluCylinder(quad, 0.0, 0.2, 3, 75, 75);
 	}
 	glPopMatrix();
@@ -79,7 +79,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 		glRotated(90, 0, 1, 0);
 		glRotated(-160, 1, 0, 0);
 		glRotated(50, 0, 0, 1);
-		glScaled(0.4, 0.1, 0.5);
+		glScaled(0.7, 0.2, 0.5);
 		gluCylinder(quad, 0, 0.2, 3, 75, 75);
 	}
 	glPopMatrix();
@@ -91,7 +91,7 @@ void WindTurbine::drawRotors(GLUquadric*& quad) {
 		glRotated(90, 0, 1, 0);
 		glRotated(-25, 1, 0, 0);
 		glRotated(50, 0, 0, 1);
-		glScaled(0.4, 0.1, 0.5);
+		glScaled(0.7, 0.2, 0.5);
 		gluCylinder(quad, 0.0, 0.2, 3, 75, 75);
 	}
 	glPopMatrix();

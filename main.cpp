@@ -11,6 +11,7 @@
 #include <iostream>
 #include <list>
 #include <algorithm>
+#include <string>
 
 #include "constants/DefaultConstants.h"
 #include "constants/MenuConstants.h"
@@ -39,6 +40,7 @@ int mCurrentY = -1;
 bool mOptionAutoPilot = false;
 bool mOptionAutoPilotReverse = false;
 bool mPreserveOriginalWindMillColors = true;
+bool mOptionShowHelp = true;
 
 /** End of runtime options **/
 
@@ -58,6 +60,7 @@ void drawObject(DrawableObject& obj);
 void display();
 void idle();
 void reshape(int width, int height);
+void glutenPrint(float x, float y, void* font, std::string text);
 void resetScene();
 void resetZoom(WindTurbine& wt);
 void zoomIn(WindTurbine& wt);
@@ -86,14 +89,38 @@ void drawObject(DrawableObject& obj) {
 	obj.draw();
 }
 
+void glutenPrint(float x, float y, void* font, std::string text) {
+	glRasterPos2f(x, y);
+	for (unsigned int i = 0; i < text.size(); i++) {
+		glutBitmapCharacter(font, text[i]);
+	}
+}
+
+void drawHelp() {
+	int xPos = -1;
+	void* font = GLUT_BITMAP_9_BY_15;
+	glutenPrint(xPos, 0.95, font, "Ctrl-0: Reload scene");
+	glutenPrint(xPos, 0.9,  font, "a     : Autopilot");
+	glutenPrint(xPos, 0.85, font, "A     : Change autopilot rotation");
+	glutenPrint(xPos, 0.8,  font, "s     : Change wind strength");
+	glutenPrint(xPos, 0.7,  font, "d     : Change wind direction");
+	glutenPrint(xPos, 0.75, font, "h     : Toggle display help");
+}
+
 void display() {
 	// Clear
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	// Draw
 	glPushMatrix();
 	{
 		glLoadIdentity(); // Start from origin
+		// Draw help if desired
+		if (mOptionShowHelp) {
+			drawHelp();
+		}
+		// Help text
 		mCam.update();
 #ifdef DEBUG
 		Logger::log(mCam);
@@ -160,7 +187,6 @@ void updateWindTurbines() {
 }
 
 /** Mouse functions **/
-
 
 void zoomIn(WindTurbine& wt) {
 	wt.set_size(wt.size() + 0.1);
@@ -274,13 +300,16 @@ void keyPress(unsigned char key, int x, int y) {
 			updateWindTurbines();
 			glutPostRedisplay();
 			break;
+		case 'h': // Toggle help display
+			mOptionShowHelp = !mOptionShowHelp;
+			break;
 		case 32: // SPACE
 			mOptionAutoPilot = !mOptionAutoPilot;
 			break;
 		case '0':
 			// Ctrl - 0
+			// Source: https://www.opengl.org/discussion_boards/showthread.php/137151-how-to-use-glutGetModifiers
 			if (glutGetModifiers() & GLUT_ACTIVE_CTRL) {
-				std::cout << "RESET" << std::endl;
 				// Reset
 				resetScene();
 			}
