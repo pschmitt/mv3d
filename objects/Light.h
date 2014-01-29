@@ -7,13 +7,16 @@
 
 #ifndef LIGHT_H_
 #define LIGHT_H_
+#include "DrawableObject.h"
 
 namespace schmitt_co {
 
-class Light {
+class Light : DrawableObject {
 	public:
 		Light();
 		virtual ~Light();
+		void draw();
+		std::ostream& print(std::ostream& out) const;
 };
 
 } /* namespace schmitt_co */

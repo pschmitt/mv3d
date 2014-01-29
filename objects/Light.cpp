@@ -18,4 +18,13 @@ Light::~Light() {
 	// TODO Auto-generated destructor stub
 }
 
+void Light::draw() {
+
+}
+
+std::ostream& Light::print(std::ostream& out) const {
+	out << "[Light] ";
+	return out;
+}
+
 } /* namespace schmitt_co */
