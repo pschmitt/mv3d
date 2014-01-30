@@ -7,6 +7,8 @@
 
 #include "Light.h"
 
+#include <iostream>
+
 namespace schmitt_co {
 
 Light::Light(unsigned int lightId, Position position) {
@@ -25,12 +27,10 @@ void Light::toggle() {
 
 void Light::enable() {
 	mEnabled = true;
-	//glEnable(mLightid);
 }
 
 void Light::disable() {
 	mEnabled = false;
-	// glDisable(mLightid);
 }
 
 void Light::lightUp() {
@@ -39,16 +39,17 @@ void Light::lightUp() {
 
 		// Don't touch this as it works!
 		GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-		GLfloat mat_shininess[] = { 75.0 };
+		GLfloat mat_shininess[] = { 65.0 };
 		GLfloat light_position[] = { (float) mPos.x(), (float) mPos.y(),
-				(float) mPos.z(), 0.0 };
+				(float) mPos.z(), 0.0 }; // if last param = 0: directional source.
 		glClearColor(0.0, 0.0, 0.0, 0.0); // Useless?
-		glShadeModel(GL_SMOOTH);
 
+		// Set specs
 		glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 		glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 		glLightfv(mLightId, GL_POSITION, light_position);
 
+		// Enable light
 		glEnable(GL_LIGHTING);
 		glEnable(mLightId);
 		glEnable(GL_DEPTH_TEST);
@@ -112,6 +113,7 @@ std::ostream& operator<<(std::ostream& out, const Light& obj) {
 	} else {
 		out << " (off)";
 	}
+	out << " - " << obj.pos();
 	return out;
 }
 

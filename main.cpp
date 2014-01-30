@@ -56,7 +56,7 @@ Camera mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
 std::list<WindTurbine> mWindTurbineList;
 // Lights
 Light light1 = Light(GL_LIGHT0, Position(1.0, 1.0, 1.0));
-Light light2 = Light(GL_LIGHT1, Position(.6, 1.0, 1.0));
+Light light2 = Light(GL_LIGHT1, Position(1.0, 1.0, 1.0));
 
 /** End of object initialization **/
 
@@ -83,7 +83,6 @@ void setupKeyboard();
 void setupMenu();
 void debugInfo();
 void setupWindow();
-void setupLightning();
 void drawWindInfo();
 
 /** End of function declaration **/
@@ -153,17 +152,11 @@ void display() {
 	// Start from origin
 	glLoadIdentity();
 
-	// Lightning
-	light1.lightUp();
-	light2.lightUp();
-
 	// Draw text
 	glPushMatrix();
 	{
-		if (light1.enabled() || light2.enabled()) {
-			// Temporarily disable lighting
-			glDisable(GL_LIGHTING);
-		}
+		// Temporarily disable lighting
+		glDisable(GL_LIGHTING);
 		// Text should always be white
 		glColor4fv(ColorPalette::white().color());
 		// Draw help if desired
@@ -172,12 +165,14 @@ void display() {
 		}
 		drawWindInfo();
 		drawLightInfo();
-		if (light1.enabled() || light2.enabled()) {
-			// Reenable lighting
-			glEnable(GL_LIGHTING);
-		}
+		// Reenable lighting
+		glEnable(GL_LIGHTING);
 	}
 	glPopMatrix();
+
+	// Lightning
+	light1.lightUp();
+	light2.lightUp();
 
 	// Draw objects
 	glPushMatrix();
@@ -536,28 +531,6 @@ void setupMenu() {
 
 /** End of menu functions **/
 
-/** Lightning **/
-
-void setupLightning() {
-
-	// Don't touch this as it works!
-	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat mat_shininess[] = { 75.0 };
-	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
-	glClearColor(0.0, 0.0, 0.0, 0.0); // Useless?
-	glShadeModel(GL_SMOOTH);
-
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_DEPTH_TEST);
-}
-
-/** End of lightning **/
-
 void setupWorld() {
 // Let's create 5 wind turbines
 	WindTurbine wt1 = WindTurbine(ColorPalette::red(),
@@ -628,7 +601,6 @@ int main(int argc, char **argv) {
 	setupMouse();
 	setupMenu();
 	setupWorld();
-	// setupLightning();
 
 #ifdef DEBUG
 	debugInfo();
