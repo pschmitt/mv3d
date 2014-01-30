@@ -136,19 +136,19 @@ void Wind::draw() {
 std::string Wind::print_strength() const {
 	std::string pretty = "None";
 	switch (mStrength) {
-			case NONE:
-				pretty = "None";
-				break;
-			case WEAK:
-				pretty = "Weak";
-				break;
-			case NORMAL:
-				pretty = "Normal";
-				break;
-			case STRONG:
-				pretty = "Strong";
-				break;
-		}
+		case NONE:
+			pretty = "None";
+			break;
+		case WEAK:
+			pretty = "Weak";
+			break;
+		case NORMAL:
+			pretty = "Normal";
+			break;
+		case STRONG:
+			pretty = "Strong";
+			break;
+	}
 	return pretty;
 }
 

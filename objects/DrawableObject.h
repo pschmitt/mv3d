@@ -18,7 +18,8 @@ class DrawableObject {
 	public:
 		DrawableObject();
 		virtual ~DrawableObject();
-		friend std::ostream& operator<<(std::ostream& out, const DrawableObject& obj) {
+		friend std::ostream& operator<<(std::ostream& out,
+				const DrawableObject& obj) {
 			return obj.print(out);
 		}
 		Position position() const;
