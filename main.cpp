@@ -55,8 +55,8 @@ Color mColor = ColorPalette::white();
 Camera mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
 std::list<WindTurbine> mWindTurbineList;
 // Lights
-Light light1 = Light(GL_LIGHT0, Position());
-Light light2 = Light(GL_LIGHT1, Position());
+Light light1 = Light(GL_LIGHT0, Position(1.0, 1.0, 1.0));
+Light light2 = Light(GL_LIGHT1, Position(.6, 1.0, 1.0));
 
 /** End of object initialization **/
 
@@ -84,7 +84,6 @@ void setupMenu();
 void debugInfo();
 void setupWindow();
 void setupLightning();
-void lightUp();
 void drawWindInfo();
 
 /** End of function declaration **/
@@ -109,13 +108,20 @@ void glutenPrint(float x, float y, void* font, std::string text) {
 void drawHelp() {
 	int xPos = -1;
 	void* font = GLUT_BITMAP_9_BY_15;
-	glutenPrint(xPos, 0.95, font, "Ctrl-0: Reload scene");
-	glutenPrint(xPos, 0.9, font, "a     : Autopilot");
-	glutenPrint(xPos, 0.85, font, "A     : Change autopilot rotation");
-	glutenPrint(xPos, 0.8, font, "s     : Change wind strength");
-	glutenPrint(xPos, 0.7, font, "d     : Change wind direction");
-	glutenPrint(xPos, 0.75, font, "h     : Toggle display help");
-	glutenPrint(xPos, 0.65, font, "q     : Quit");
+	glColor4fv(ColorPalette::gray().color());
+	// TODO Don't do character alignment
+	glutenPrint(xPos, 0.95, font, " Cheat sheet");
+	glutenPrint(xPos, 0.9, font, " ---");
+	glColor4fv(ColorPalette::white().color());
+	glutenPrint(xPos, 0.85, font, " Ctrl-0: Reload scene");
+	glutenPrint(xPos, 0.8, font, " a     : Autopilot");
+	glutenPrint(xPos, 0.75, font, " A     : Change autopilot rotation");
+	glutenPrint(xPos, 0.7, font, " s     : Change wind strength");
+	glutenPrint(xPos, 0.65, font, " d     : Change wind direction");
+	glutenPrint(xPos, 0.6, font, " l     : Toggle light 1");
+	glutenPrint(xPos, 0.55, font, " L     : Toggle light 2");
+	glutenPrint(xPos, 0.5, font, " h     : Toggle display help");
+	glutenPrint(xPos, 0.45, font, " q     : Quit");
 }
 
 void drawWindInfo() {
@@ -127,6 +133,19 @@ void drawWindInfo() {
 	glutenPrint(xPos, 0.95, font, ss.str());
 }
 
+void drawLightInfo() {
+	int xPos = 0.95;
+	void* font = GLUT_BITMAP_9_BY_15;
+	std::stringstream ss;
+	ss << light1;
+	glutenPrint(xPos, 0.9, font, ss.str());
+	// Clear stream
+	ss.clear();
+	ss.str(std::string());
+	ss << light2;
+	glutenPrint(xPos, 0.85, font, ss.str());
+}
+
 void display() {
 	// Clear
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -134,11 +153,17 @@ void display() {
 	// Start from origin
 	glLoadIdentity();
 
+	// Lightning
+	light1.lightUp();
+	light2.lightUp();
+
 	// Draw text
 	glPushMatrix();
 	{
-		// Temporarily disable lighting
-		glDisable(GL_LIGHTING);
+		if (light1.enabled() || light2.enabled()) {
+			// Temporarily disable lighting
+			glDisable(GL_LIGHTING);
+		}
 		// Text should always be white
 		glColor4fv(ColorPalette::white().color());
 		// Draw help if desired
@@ -146,15 +171,17 @@ void display() {
 			drawHelp();
 		}
 		drawWindInfo();
-		// Reenable lighting
-		glEnable(GL_LIGHTING);
+		drawLightInfo();
+		if (light1.enabled() || light2.enabled()) {
+			// Reenable lighting
+			glEnable(GL_LIGHTING);
+		}
 	}
 	glPopMatrix();
 
 	// Draw objects
 	glPushMatrix();
 	{
-		lightUp();
 		// Help text
 		mCam.update();
 #ifdef DEBUG
@@ -242,7 +269,7 @@ void resetZoom(WindTurbine& wt) {
 
 void resetScene() {
 	for_each(mWindTurbineList.begin(), mWindTurbineList.end(), resetZoom);
-	mWind.set_size(1.0f);
+	mWind.set_size(0.1f);
 	mCam.set_angle(0.0f);
 	// mCam.set_position(Position(0, 0, 0));
 	mOptionAutoPilot = mOptionAutoPilotReverse = false;
@@ -337,6 +364,12 @@ void keyPress(unsigned char key, int x, int y) {
 			mWind.next_direction();
 			updateWindTurbines();
 			glutPostRedisplay();
+			break;
+		case 'l':
+			light1.toggle();
+			break;
+		case 'L':
+			light2.toggle();
 			break;
 		case 'h': // Toggle help display
 			mOptionShowHelp = !mOptionShowHelp;
@@ -506,13 +539,12 @@ void setupMenu() {
 /** Lightning **/
 
 void setupLightning() {
-	glEnable(GL_COLOR_MATERIAL);
 
 	// Don't touch this as it works!
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 75.0 };
 	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(0.0, 0.0, 0.0, 0.0); // Useless?
 	glShadeModel(GL_SMOOTH);
 
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -522,9 +554,6 @@ void setupLightning() {
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_DEPTH_TEST);
-}
-
-void lightUp() {
 }
 
 /** End of lightning **/
@@ -587,6 +616,10 @@ int main(int argc, char **argv) {
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// glEnable(GL_BLEND);
 	//glEnable(GL_POLYGON_STIPPLE);
+
+	// Enable this so that we don't loose colors when lightning on
+	glEnable(GL_COLOR_MATERIAL);
+
 	setupWindow();
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
@@ -595,7 +628,7 @@ int main(int argc, char **argv) {
 	setupMouse();
 	setupMenu();
 	setupWorld();
-	setupLightning();
+	// setupLightning();
 
 #ifdef DEBUG
 	debugInfo();

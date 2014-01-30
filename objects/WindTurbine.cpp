@@ -57,8 +57,8 @@ void WindTurbine::drawMotor(GLUquadric*& quad) {
 }
 
 void WindTurbine::drawRotors(GLUquadric*& quad) {
-	// TODO Move according to wind strength
 	glTranslated(0, 0, 0.3);
+	glRotated(glutGet(GLUT_ELAPSED_TIME) * mWind.glStrength(), 0, 0, 1);
 	// First rotor
 	glPushMatrix();
 	{
@@ -111,7 +111,6 @@ void WindTurbine::draw() {
 		// Start with the base, then the motor and the rotors
 		drawBase(quad);
 		drawMotor(quad);
-		glRotated(glutGet(GLUT_ELAPSED_TIME) * mWind.glStrength(), 0, 0, 1);
 		drawRotors(quad);
 	}
 	glPopMatrix();

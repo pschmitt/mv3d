@@ -32,6 +32,7 @@ class ColorPalette {
 		static Color yellow() { return Color("yellow", 1.0F, 1.0F, 0.0F); };
 		static Color orange() { return Color("orange", 1.0F, 0.5F, 0.0F); };
 		static Color cyan()   { return Color("cyan"  , 0.0F, 0.8F, 1.0F); };
+		static Color gray()   { return Color("gray"  , 0.752941F, 0.752941F, 0.752941F); };
 };
 
 } /* namespace schmitt_co */

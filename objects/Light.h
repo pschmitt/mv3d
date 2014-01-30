@@ -26,7 +26,7 @@ class Light {
 		void set_lightid(unsigned int lightId);
 		const Position& pos() const;
 		void set_pos(const Position& pos);
-
+		friend std::ostream& operator<<(std::ostream& out, const Light& obj);
 	private:
 		bool mEnabled;
 		Position mPos;
