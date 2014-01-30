@@ -8,23 +8,22 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#include <algorithm>
 #include <iostream>
 #include <list>
-#include <algorithm>
-#include <string>
 #include <sstream>
+#include <string>
 
 #include "constants/DefaultConstants.h"
 #include "constants/MenuConstants.h"
 #include "constants/WindowConstants.h"
-
-#include "utils/Logger.h"
-#include "utils/ColorPalette.h"
 #include "objects/DrawableObject.h"
 #include "objects/Camera.h"
 #include "objects/Light.h"
 #include "objects/Wind.h"
 #include "objects/WindTurbine.h"
+#include "utils/Logger.h"
+#include "utils/ColorPalette.h"
 
 // debug mode
 // #define DEBUG 1
@@ -535,7 +534,7 @@ void setupWorld() {
 	mWindTurbineList.push_back(wt4);
 	mWindTurbineList.push_back(wt5);
 // Wind
-	mWind.set_position(Position(0.0f, 0.3f, 0.0f));
+	mWind.set_position(Position(0.0f, 0.5f, 0.0f));
 	mWind.set_color(ColorPalette::yellow());
 }
 
@@ -562,18 +561,18 @@ void setupWindow() {
 
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
-// http://www.opengl.org/documentation/specs/glut/spec3/node12.html
-// GLUT_RGBA: RGBA mode window
-// GLUT_DOUBLE: Double buffered window
-// GLUT_DEPTH: Window with a depth buffer
+	// http://www.opengl.org/documentation/specs/glut/spec3/node12.html
+	// GLUT_RGBA: RGBA mode window
+	// GLUT_DOUBLE: Double buffered window
+	// GLUT_DEPTH: Window with a depth buffer
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-// GL_DEPTH_TEST: do depth comparisons and update the depth buffer
-// http://www.opengl.org/sdk/docs/man/xhtml/glEnable.xml
+	// GL_DEPTH_TEST: do depth comparisons and update the depth buffer
+	// http://www.opengl.org/sdk/docs/man/xhtml/glEnable.xml
 	// glEnable(GL_DEPTH_TEST); // Do I need this?
 	// Enable blending (for transparency)
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// glEnable(GL_BLEND);
-	//glEnable(GL_POLYGON_STIPPLE);
+	// glEnable(GL_POLYGON_STIPPLE);
 
 	setupWindow();
 	glutReshapeFunc(reshape);
