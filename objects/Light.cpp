@@ -35,13 +35,11 @@ void Light::disable() {
 
 void Light::lightUp() {
 	if (mEnabled) {
-		glEnable(GL_COLOR_MATERIAL);
-
 		// Don't touch this as it works!
 		GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 		GLfloat mat_shininess[] = { 65.0 };
 		GLfloat light_position[] = { (float) mPos.x(), (float) mPos.y(),
-				(float) mPos.z(), 0.0 }; // if last param = 0: directional source.
+				(float) mPos.z(), 0.0 }; // if last param = 0: directional source
 		glClearColor(0.0, 0.0, 0.0, 0.0); // Useless?
 
 		// Set specs
@@ -53,9 +51,12 @@ void Light::lightUp() {
 		glEnable(GL_LIGHTING);
 		glEnable(mLightId);
 		glEnable(GL_DEPTH_TEST);
+		// Don't lose colors
+		glEnable(GL_COLOR_MATERIAL);
 	} else {
 		glDisable(GL_LIGHTING);
 		glDisable(mLightId);
+		glDisable(GL_COLOR_MATERIAL);
 	}
 }
 
@@ -76,7 +77,7 @@ const Position& Light::pos() const {
 }
 
 void Light::set_pos(const Position& pos) {
-	this->mPos = pos;
+	mPos = pos;
 }
 
 std::ostream& operator<<(std::ostream& out, const Light& obj) {

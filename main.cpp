@@ -55,8 +55,9 @@ Color mColor = ColorPalette::white();
 Camera mCam = Camera(Position(0.0F, 0.0f, -0.2f), Position(0.0f, 0.0f, 0.0f));
 std::list<WindTurbine> mWindTurbineList;
 // Lights
+// TODO fix second light
 Light light1 = Light(GL_LIGHT0, Position(1.0, 1.0, 1.0));
-Light light2 = Light(GL_LIGHT1, Position(1.0, 1.0, 1.0));
+Light light2 = Light(GL_LIGHT1, Position(-1.0, 1.0, 1.0));
 
 /** End of object initialization **/
 
@@ -295,19 +296,7 @@ void zoom(bool zoomingIn) {
 
 void mousePress(int button, int state, int x, int y) {
 	switch (button) {
-		case GLUT_LEFT_BUTTON:
-			if (state == GLUT_DOWN) {
-				mMousePressed = true;
-				mLastX = x;
-				mLastY = y;
-			} else if (state == GLUT_UP) {
-				mMousePressed = false;
-				mLastX = mLastY = -1;
-				// TODO update cam ?
-				// mCam.set_angle(  * 0.01f)
-			}
-			break;
-			// http://stackoverflow.com/a/7885789
+		// http://stackoverflow.com/a/7885789
 		case 3:
 		case 4:
 			// Each wheel event reports like a button click, GLUT_DOWN then GLUT_UP
@@ -389,10 +378,6 @@ void keyPress(unsigned char key, int x, int y) {
 
 void specialKeyPress(int key, int x, int y) {
 	switch (key) {
-		case GLUT_KEY_UP:
-			break;
-		case GLUT_KEY_DOWN:
-			break;
 		case GLUT_KEY_LEFT:
 			mCam.increase_angle();
 			break;
@@ -589,9 +574,6 @@ int main(int argc, char **argv) {
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// glEnable(GL_BLEND);
 	//glEnable(GL_POLYGON_STIPPLE);
-
-	// Enable this so that we don't loose colors when lightning on
-	glEnable(GL_COLOR_MATERIAL);
 
 	setupWindow();
 	glutReshapeFunc(reshape);
