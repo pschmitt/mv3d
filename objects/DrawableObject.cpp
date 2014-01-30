@@ -6,7 +6,7 @@
  */
 
 #include "DrawableObject.h"
-#include "../utils/ColorPalette.h"
+#include "../utils/ColorPalette.hpp"
 
 namespace schmitt_co {
 

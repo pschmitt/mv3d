@@ -22,8 +22,12 @@ namespace schmitt_co {
 
 class ColorPalette {
 	public:
-		ColorPalette();
-		virtual ~ColorPalette();
+		ColorPalette() {
+		}
+		;
+		virtual ~ColorPalette() {
+		}
+		;
 		static Color black() {
 			return Color("black", 0.0F, 0.0F, 0.0F);
 		}

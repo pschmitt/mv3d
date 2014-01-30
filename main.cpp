@@ -23,7 +23,7 @@
 #include "objects/Wind.h"
 #include "objects/WindTurbine.h"
 #include "utils/Logger.h"
-#include "utils/ColorPalette.h"
+#include "utils/ColorPalette.hpp"
 
 // debug mode
 // #define DEBUG 1
